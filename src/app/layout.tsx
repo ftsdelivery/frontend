@@ -1,4 +1,4 @@
-import BootstrapClient from '@/components/BootstrapCLient'
+import BootstrapClient from '@/components/BootstrapClient'
 import { SITE_NAME } from '@/constants/seo.constants'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap/dist/css/bootstrap.css'
