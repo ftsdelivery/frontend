@@ -1,0 +1,14 @@
+.iconCircle {
+	width: 150px;
+	height: 150px;
+	background-color: #007bff; /* Синий цвет */
+	border-radius: 50%; /* Делает фон круглым */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto; /* Центрирует иконку */
+}
+
+.iconWhite {
+	color: #fff; /* Белый цвет иконки */
+}

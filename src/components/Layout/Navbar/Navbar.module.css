@@ -1,0 +1,46 @@
+/* Navbar.module.css */
+
+.navLink {
+	position: relative;
+	display: inline-block;
+	padding-bottom: 10px;
+}
+
+.navLink::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 0;
+	height: 5px;
+	background-color: #007bff; /* Цвет полоски */
+	transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+}
+
+.navLink:hover::after {
+	width: 100%;
+	left: 0;
+}
+
+.LoginButton {
+	border-radius: 10px;
+	height: 45px;
+}
+
+.MobileLoginButton {
+	height: 45px;
+}
+
+.SubmitButon {
+	border: 2px solid #007bff;
+	border-radius: 10px;
+	color: #007bff;
+	display: flex;
+	justify-content: center;
+}
+
+.SubmitButon:hover {
+	border: 2px solid #007bff;
+	border-radius: 10px;
+	color: #007bff;
+}
