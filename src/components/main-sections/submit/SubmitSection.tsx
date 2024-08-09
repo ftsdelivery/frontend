@@ -232,7 +232,7 @@ export default function SubmitSectionComponent() {
 				{/* Добавление reCAPTCHA */}
 				<div className='mb-3 d-flex justify-content-center'>
 					<ReCAPTCHA
-						sitekey='6LdtdSMqAAAAAE-zfag47XtfUT6d-Sr5bzMm9tM7'
+						sitekey='6LdtdSMqAAAAAPI58Wj9yA2_pjmCZMKW_SmA8mvl'
 						onChange={handleCaptchaChange}
 					/>
 				</div>
