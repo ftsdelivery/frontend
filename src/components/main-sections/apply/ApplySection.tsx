@@ -18,7 +18,7 @@ export default function ApplySectionComponent() {
 				</div>
 				<div className='col-md-6 order-md-1 mt-3'>
 					<img
-						src='http://localhost:3000/carousel/test_image.jpg'
+						src='https://fts-delivery.vercel.app/carousel/test_image.jpg'
 						className='img-fluid rounded'
 						alt='Как подать заявку?'
 					/>
