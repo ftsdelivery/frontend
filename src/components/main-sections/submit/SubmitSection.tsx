@@ -40,10 +40,10 @@ export default function SubmitSectionComponent() {
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-		// if (!captchaValue) {
-		// 	alert('Пожалуйста, подтвердите, что вы не робот.')
-		// 	return
-		// }
+		if (!captchaValue) {
+			toast.error('Пожалуйста, подтвердите, что вы не робот.')
+			return
+		}
 
 		const formData = {
 			ip: (event.target as any).ip.value,
@@ -231,7 +231,10 @@ export default function SubmitSectionComponent() {
 
 				{/* Добавление reCAPTCHA */}
 				<div className='mb-3 d-flex justify-content-center'>
-					<ReCAPTCHA sitekey='ВАШ_SITE_KEY' onChange={handleCaptchaChange} />
+					<ReCAPTCHA
+						sitekey='6LdtdSMqAAAAAE-zfag47XtfUT6d-Sr5bzMm9tM7'
+						onChange={handleCaptchaChange}
+					/>
 				</div>
 
 				<div className='d-flex justify-content-center'>
