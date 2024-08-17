@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @map("updated_at")
+  email            String   @unique
+  name             String?
+  password         String
+  role             String   @default("USER")
+  admin_password   String?
+  used_promo_codes String   @default("[]")
+  orders_count     Int      @default(0)
+  id               Int      @id @default(autoincrement())
+
+  @@map("users")
+}
+
+model Order {
+  id            Int      @id @default(autoincrement())
+  status        Status?  @default(PENDING)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+  ip            String
+  marketPlace   String
+  warehouse     String
+  deliveryType  String   @map("delivery_type")
+  quantity      String
+  extraServices String   @map("extra_services")
+  pickupDate    String   @map("pickup_date")
+  pickupTime    String   @map("pickup_time")
+  pickupAddress String   @map("pickup_address")
+  contactInfo   String   @map("contact_info")
+  comment       String?
+  promoCode     String?  @map("promo_code")
+  orderPrice    Float    @map("order_price")
+  userId        Int?     @map("user_id")
+
+  @@map("orders")
+}
+
+model PromoCode {
+  id            Int      @id @default(autoincrement())
+  author_id     Int      @map("author_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+  code          String   @unique
+  discount      Float
+  count_of_uses Int      @default(0) @map("count_of_uses")
+  limit_of_uses Int      @default(0) @map("limit_of_uses")
+  isActive      Boolean  @default(true) @map("is_active")
+
+  @@map("promo_codes")
+}
+
+enum Status {
+  PENDING
+  CONFIRMED
+  CANCELED
+  DELIVERED
+}

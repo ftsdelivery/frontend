@@ -1,8 +1,10 @@
 'use client'
 
-import { orderService } from '@/services/orders.service'
-import { useMutation } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { checkAvailableTimeSlots, createOrder } from '@/services/order.service'
+import { getUserIdByEmail } from '@/services/user.service'
+import { Session } from 'next-auth'
+import { getSession } from 'next-auth/react'
+import { useEffect, useRef, useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { toast, ToastContainer } from 'react-toastify'
 import styles from './SubmitSection.module.css'
@@ -12,27 +14,58 @@ export default function SubmitSectionComponent() {
 	const [warehouses, setWarehouses] = useState<string[]>([])
 	const [promoCodeVisible, setPromoCodeVisible] = useState(false)
 	const [captchaValue, setCaptchaValue] = useState<string | null>(null)
-
-	const mutation = useMutation({
-		mutationFn: (data: any) => orderService.createOrder(data),
-		onSuccess: () => {
-			toast.success('Заявка успешно отправлена!')
-		},
-		onError: () => {
-			toast.error('Произошла ошибка при отправке заявки')
-		},
-	})
+	const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([])
+	const [selectedDate, setSelectedDate] = useState<string>('')
+	const [minDate, setMinDate] = useState('')
+	const [session, setSession] = useState<Session | null>(null)
+	const [userId, setUserId] = useState<number | null>(null)
+	const formRef = useRef<HTMLFormElement>(null)
 
 	useEffect(() => {
-		// Обновляем доступные склады при изменении маркетплейса
-		const warehouseOptions: { [key: string]: string[] } = {
-			ЯндексМаркет: ['Склад 1', 'Склад 3', 'Склад 5'],
-			Озон: ['Склад 2', 'Склад 4', 'Склад 6'],
-			ВайлдБерриз: ['Склад 1', 'Склад 2', 'Склад 6'],
+		const fetchData = async () => {
+			// Fetch and set session
+			if (!session) {
+				const sessionData = await getSession()
+				setSession(sessionData)
+			}
+
+			// Fetch userId if session is available
+			if (session?.user?.email && userId === null) {
+				try {
+					const userID = await getUserIdByEmail(session.user.email)
+					setUserId(userID)
+				} catch (error) {
+					console.log('User not found, setting userId to null')
+					setUserId(null)
+				}
+			}
+
+			// Set minDate
+			const today = new Date()
+			const formattedDate = today.toISOString().split('T')[0]
+			setMinDate(formattedDate)
+
+			// Set warehouse options
+			const warehouseOptions: { [key: string]: string[] } = {
+				ЯндексМаркет: ['Склад 1', 'Склад 3', 'Склад 5'],
+				Озон: ['Склад 2', 'Склад 4', 'Склад 6'],
+				ВайлдБерриз: ['Склад 1', 'Склад 2', 'Склад 6'],
+			}
+			setWarehouses(marketPlace ? warehouseOptions[marketPlace] : [])
+
+			// Fetch available time slots if selectedDate is set
+			if (selectedDate) {
+				try {
+					const slots = await checkAvailableTimeSlots(selectedDate)
+					setAvailableTimeSlots(slots)
+				} catch (error) {
+					console.error(error)
+				}
+			}
 		}
 
-		setWarehouses(marketPlace ? warehouseOptions[marketPlace] : [])
-	}, [marketPlace])
+		fetchData()
+	}, [session, userId, marketPlace, selectedDate])
 
 	const handleCaptchaChange = (value: string | null) => {
 		setCaptchaValue(value)
@@ -40,31 +73,45 @@ export default function SubmitSectionComponent() {
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
-		if (!captchaValue) {
-			toast.error('Пожалуйста, подтвердите, что вы не робот.')
-			return
+		// if (!captchaValue) {
+		// 	toast.error('Пожалуйста, подтвердите, что вы не робот.')
+		// 	return
+		// }
+		if (userId === null) {
+			console.log('UserId is still null')
 		}
 
-		const formData = {
-			ip: (event.target as any).ip.value,
-			marketPlace: (event.target as any).marketPlace.value,
-			warehouse: (event.target as any).warehouse.value,
-			deliveryType: (event.target as any).deliveryType.value,
-			quantity: (event.target as any).quantity.value,
-			extraServices: (event.target as any).extraServices.value,
-			pickupDate: (event.target as any).pickupDate.value,
-			pickupTime: (event.target as any).pickupTime.value,
-			pickupAddress: (event.target as any).pickupAddress.value,
-			contactInfo: (event.target as any).contactInfo.value,
-			comment: (event.target as any).comment.value || 'Без комментария',
-			promoCode: promoCodeVisible
-				? (event.target as any).promoCode.value
-				: 'Без промокода',
-			orderPrice: 10000,
+		try {
+			createOrder({
+				ip: (event.target as any).ip.value,
+				marketPlace: (event.target as any).marketPlace.value,
+				warehouse: (event.target as any).warehouse.value,
+				delivery_type: (event.target as any).deliveryType.value,
+				quantity: (event.target as any).quantity.value,
+				extra_services: (event.target as any).extraServices.value,
+				pickup_date: (event.target as any).pickupDate.value,
+				pickup_time: (event.target as any).pickupTime.value,
+				pickup_address: (event.target as any).pickupAddress.value,
+				contact_info: (event.target as any).contactInfo.value,
+				comment: (event.target as any).comment.value || 'Без комментария',
+				promo_code: promoCodeVisible
+					? (event.target as any).promoCode.value
+					: 'Без промокода',
+				order_price: 10000,
+				user_id: userId,
+			}).then(() => {
+				toast.success('Заявка успешно отправлена')
+				if (formRef.current) {
+					formRef.current.reset()
+				}
+				setMarketPlace('')
+				setWarehouses([])
+				setPromoCodeVisible(false)
+				setCaptchaValue(null)
+			})
+		} catch (error) {
+			toast.error('Произошла ошибка при отправке заявки')
 		}
-
-		// Отправка данных на сервер
-		mutation.mutate(formData)
 	}
 
 	return (
@@ -72,7 +119,7 @@ export default function SubmitSectionComponent() {
 			<h2 className='fw-bold mb-4 text-center'>
 				<i className='bi bi-pencil-square text-primary me-2'></i> Подать заявку
 			</h2>
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit} ref={formRef}>
 				<div className='mb-3'>
 					<label htmlFor='ip' className='form-label'>
 						ИП:
@@ -155,6 +202,9 @@ export default function SubmitSectionComponent() {
 						type='date'
 						className='form-control'
 						id='pickupDate'
+						value={selectedDate}
+						onChange={e => setSelectedDate(e.target.value)}
+						min={minDate}
 						required
 					/>
 				</div>
@@ -163,10 +213,15 @@ export default function SubmitSectionComponent() {
 						Время забора:
 					</label>
 					<select className='form-select' id='pickupTime' required>
-						<option value='12-13'>с 12:00 до 13:00</option>
-						<option value='13-14'>с 13:00 до 14:00</option>
-						<option value='14-15'>с 14:00 до 15:00</option>
-						<option value='15-16'>с 15:00 до 16:00</option>
+						{availableTimeSlots.length > 0 ? (
+							availableTimeSlots.map((slot, index) => (
+								<option key={index} value={slot}>
+									{slot}
+								</option>
+							))
+						) : (
+							<option>Нет доступных временных интервалов</option>
+						)}
 					</select>
 				</div>
 				<div className='mb-3'>
@@ -232,7 +287,7 @@ export default function SubmitSectionComponent() {
 				{/* Добавление reCAPTCHA */}
 				<div className='mb-3 d-flex justify-content-center'>
 					<ReCAPTCHA
-						sitekey='6LdtdSMqAAAAAPI58Wj9yA2_pjmCZMKW_SmA8mvl'
+						sitekey='6LdwTSgqAAAAAGcFOlepu3B3O-wBVtd8h27IQo_h'
 						onChange={handleCaptchaChange}
 					/>
 				</div>
@@ -243,7 +298,7 @@ export default function SubmitSectionComponent() {
 					</button>
 				</div>
 			</form>
-			<ToastContainer autoClose={2000} />
+			<ToastContainer autoClose={1500} />
 		</section>
 	)
 }

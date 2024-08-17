@@ -6,7 +6,6 @@ import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
 import { Toaster } from 'sonner'
 import './globals.css'
-import { Providers } from './providers'
 
 const roboto = Roboto({
 	subsets: ['latin'],
@@ -32,11 +31,9 @@ export default function RootLayout({
 	return (
 		<html lang='ru'>
 			<body className={roboto.className}>
-				<Providers>
-					{children}
-					<BootstrapClient />
-					<Toaster theme='system' position='bottom-right' duration={1500} />
-				</Providers>
+				{children}
+				<BootstrapClient />
+				<Toaster theme='system' position='bottom-right' duration={1500} />
 			</body>
 		</html>
 	)

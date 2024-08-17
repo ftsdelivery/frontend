@@ -9,6 +9,7 @@ export default function Loader() {
 				alt='logo'
 				width={400}
 				height={300}
+				priority={true}
 			/>
 			<div className={styles['loader-inner']}>
 				<div className={styles['loader-circle']}></div>

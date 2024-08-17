@@ -1,51 +1,138 @@
-'use client'
-
-import { DASHBOARD_PAGES } from '@/config/pages-url.config'
-import { authService } from '@/services/auth.service'
-import { IAuthForm } from '@/types/auth.types'
-import { useMutation } from '@tanstack/react-query'
+import { createUser, getUserByEmail } from '@/services/user.service'
+import bcrypt from 'bcryptjs' // Импортируем bcrypt
+import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { ToastContainer, toast } from 'react-toastify'
+import React, { useState } from 'react'
+import PasswordStrengthBar from 'react-password-strength-bar'
+import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-export default function LoginModal() {
-	// Состояние для переключения между формами
-	const [isLogin, setIsLogin] = useState(true)
+export default function SignInForm() {
+	const [isRegistering, setIsRegistering] = useState(false)
+	const [password, setPassword] = useState('')
+	const [passwordStrength, setPasswordStrength] = useState(0)
+	const [showPassword, setShowPassword] = useState(false)
+	const [isLoginSuccessful, setIsLoginSuccessful] = useState(false)
+	const router = useRouter()
 
-	// Настройка react-hook-form
-	const { register, handleSubmit, reset } = useForm<IAuthForm>({
-		mode: 'onChange',
-	})
-
-	// Используем useRouter для перенаправления
-	const { push } = useRouter()
-
-	// Настройка useMutation для обработки формы
-	const { mutate } = useMutation({
-		mutationKey: ['auth'],
-		mutationFn: async (data: IAuthForm) =>
-			authService.main(isLogin ? 'login' : 'register', data),
-		onSuccess() {
-			toast.success('Успешный вход!')
-			reset()
-			push(DASHBOARD_PAGES.HOME)
-		},
-		onError() {
-			toast.error('Неверный логин или пароль!')
-		},
-	})
-
-	// Обработчик отправки формы
-	const onSubmit: SubmitHandler<IAuthForm> = data => {
-		mutate(data)
+	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setPassword(e.target.value)
 	}
 
-	useEffect(() => {
-		// Дополнительные действия при смене формы, если необходимо
-		reset()
-	}, [isLogin, reset])
+	const handlePasswordStrengthChange = (score: number) => {
+		setPasswordStrength(score)
+	}
+
+	const toggleShowPassword = () => {
+		setShowPassword(prevState => !prevState)
+	}
+
+	const handleLoginSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault()
+
+		const formData = new FormData(event.currentTarget)
+		const email = formData.get('email') as string
+		const password = formData.get('password') as string
+
+		try {
+			// Предполагается, что у вас есть функция `getUserByEmail`, которая ищет пользователя в базе данных по email
+			const user = await getUserByEmail(email)
+
+			if (user === null) {
+				toast.error('Пользователь с таким email не найден')
+				return
+			}
+			console.log(user.password)
+			// Сравнение введённого пароля с хешированным паролем из базы данных
+			const isPasswordValid = await bcrypt.compare(password, user.password)
+			console.log(isPasswordValid)
+			if (!isPasswordValid) {
+				toast.error('Неправильный пароль')
+				return
+			}
+
+			// Если пароль совпадает, выполняем вход
+			const res = await signIn('credentials', {
+				email: email,
+				password: user.password,
+				redirect: false,
+			})
+
+			if (res && !res.error) {
+				toast.success('Вы успешно вошли в систему')
+				setIsLoginSuccessful(true)
+				const modalElement = document.getElementById('loginModal')
+				if (modalElement) {
+					modalElement.classList.remove('show')
+					modalElement.style.display = 'none'
+					document.body.classList.remove('modal-open')
+					const modalBackdrop = document.querySelector('.modal-backdrop')
+					if (modalBackdrop) {
+						modalBackdrop.remove()
+					}
+				}
+				router.push('/account')
+			} else {
+				toast.error('Произошла ошибка при входе')
+			}
+		} catch (error) {
+			console.error('Ошибка при входе:', error)
+			toast.error('Произошла ошибка при входе')
+		}
+	}
+
+	const handleRegisterSubmit = async (
+		event: React.FormEvent<HTMLFormElement>
+	) => {
+		event.preventDefault()
+
+		const formData = new FormData(event.currentTarget)
+		const password = formData.get('password') as string
+		const confirmPassword = formData.get('confirmPassword')
+
+		if (passwordStrength < 3) {
+			toast.error(
+				'Пароль недостаточно надежен. Пожалуйста, используйте более сложный пароль.'
+			)
+			return
+		}
+
+		if (password !== confirmPassword) {
+			toast.error('Пароли не совпадают', {
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			})
+			return
+		}
+
+		try {
+			// Хэшируем пароль перед его сохранением
+			const hashedPassword = await bcrypt.hash(password, 10)
+
+			await createUser({
+				email: formData.get('email') as string,
+				password: hashedPassword, // Используем зашифрованный пароль
+			})
+			toast.success('Вы успешно зарегистрировались')
+			isRegistering && toggleFormType()
+		} catch (error) {
+			const err = error as Error
+			console.error(err)
+			if (err.message === 'User already exists') {
+				toast.error('Пользователь с таким email уже существует')
+			} else {
+				toast.error('Произошла ошибка при регистрации')
+			}
+		}
+	}
+
+	const toggleFormType = () => {
+		setIsRegistering(prevState => !prevState)
+		setPassword('')
+		setPasswordStrength(0)
+		setShowPassword(false)
+	}
 
 	return (
 		<div
@@ -59,7 +146,7 @@ export default function LoginModal() {
 				<div className='modal-content'>
 					<div className='modal-header'>
 						<h5 className='modal-title' id='loginModalLabel'>
-							{isLogin ? 'Войти в личный кабинет' : 'Регистрация'}
+							{isRegistering ? 'Регистрация' : 'Вход'}
 						</h5>
 						<button
 							type='button'
@@ -69,64 +156,114 @@ export default function LoginModal() {
 						></button>
 					</div>
 					<div className='modal-body'>
-						<form onSubmit={handleSubmit(onSubmit)}>
+						<form
+							onSubmit={
+								isRegistering ? handleRegisterSubmit : handleLoginSubmit
+							}
+						>
 							<div className='mb-3'>
-								<label htmlFor='email' className='form-label'>
-									Почта
-								</label>
+								<label className='form-label'>Почта</label>
 								<input
 									type='email'
+									name='email'
 									className='form-control'
-									id='email'
 									placeholder='Введите вашу почту'
-									{...register('email')}
+									required
 								/>
 							</div>
 							<div className='mb-3'>
-								<label htmlFor='password' className='form-label'>
-									Пароль
-								</label>
-								<input
-									type='password'
-									className='form-control'
-									id='password'
-									placeholder='Введите ваш пароль'
-									{...register('password')}
-								/>
+								<label className='form-label'>Пароль</label>
+								<div className='input-group'>
+									<input
+										type={showPassword ? 'text' : 'password'}
+										name='password'
+										className='form-control'
+										placeholder='Введите ваш пароль'
+										value={password}
+										onChange={handlePasswordChange}
+										required
+									/>
+									<span
+										className='input-group-text'
+										onClick={toggleShowPassword}
+										style={{ cursor: 'pointer' }}
+									>
+										<i
+											className={`bi ${
+												showPassword ? 'bi-eye-slash' : 'bi-eye'
+											}`}
+										></i>{' '}
+									</span>
+								</div>
+								{isRegistering && (
+									<PasswordStrengthBar
+										style={{ marginTop: '8px' }}
+										scoreWordStyle={{ fontSize: '14px' }}
+										password={password}
+										onChangeScore={handlePasswordStrengthChange}
+										minLength={8}
+										shortScoreWord='Слишком короткий пароль'
+										scoreWords={[
+											'Очень слабый пароль',
+											'Слабый пароль',
+											'Нормальный пароль',
+											'Сильный пароль',
+											'Очень сильный пароль',
+										]}
+									/>
+								)}
 							</div>
 
-							{/* Если это форма регистрации, добавим поле для подтверждения пароля */}
-							{!isLogin && (
+							{isRegistering && (
 								<div className='mb-3'>
-									<label htmlFor='confirmPassword' className='form-label'>
-										Подтвердите пароль
-									</label>
-									<input
-										type='password'
-										className='form-control'
-										id='confirmPassword'
-										placeholder='Подтвердите ваш пароль'
-									/>
+									<label className='form-label'>Подтверждение пароля</label>
+									<div className='input-group'>
+										<input
+											type={showPassword ? 'text' : 'password'}
+											name='confirmPassword'
+											className='form-control'
+											placeholder='Повторите ваш пароль'
+											required
+										/>
+										<span
+											className='input-group-text'
+											onClick={toggleShowPassword}
+											style={{ cursor: 'pointer' }}
+										>
+											<i
+												className={`bi ${
+													showPassword ? 'bi-eye-slash' : 'bi-eye'
+												}`}
+											></i>{' '}
+										</span>
+									</div>
 								</div>
 							)}
-							<div className='modal-footer'>
-								<button type='submit' className='btn btn-primary'>
-									{isLogin ? 'Войти' : 'Зарегистрироваться'}
+
+							<div className='modal-footer p-0 border-0'>
+								<button
+									type='submit'
+									className='btn btn-primary w-100'
+									disabled={isRegistering && passwordStrength < 3}
+									{...(isLoginSuccessful && { 'data-bs-dismiss': 'modal' })}
+								>
+									{isRegistering ? 'Зарегистрироваться' : 'Войти'}
 								</button>
 							</div>
 						</form>
 						<button
 							type='button'
 							className='btn btn-link mt-3'
-							onClick={() => setIsLogin(!isLogin)}
+							onClick={toggleFormType}
 						>
-							{isLogin ? 'Зарегистрироваться' : 'Уже есть аккаунт? Войти'}
+							{isRegistering
+								? 'Уже есть аккаунт? Войти'
+								: 'Нет аккаунта? Зарегистрироваться'}
 						</button>
 					</div>
+					<ToastContainer autoClose={1500} pauseOnFocusLoss={false} limit={3} />
 				</div>
 			</div>
-			{/* Контейнер для отображения уведомлений */}
-			<ToastContainer autoClose={3000} />
 		</div>
 	)
 }
