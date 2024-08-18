@@ -1,8 +1,10 @@
+import styles from './NewsSection.module.css'
+
 export default function NewsSectionComponent() {
 	return (
 		<section id='news' className='container py-5'>
 			<div className='row'>
-				<div className='col-md-6'>
+				<div className='col-md-6 order-md-2'>
 					<h2 className='fw-bold mb-4'>
 						<i className='bi bi-newspaper text-primary me-2'></i> Новости
 					</h2>
@@ -11,7 +13,7 @@ export default function NewsSectionComponent() {
 						свежие новости и будьте в курсе наших последних достижений и
 						нововведений.
 					</p>
-					<a href='#' className='btn btn-primary'>
+					<a href='#' className={`btn btn-primary ${styles.ButtonMore}`}>
 						Читать больше
 					</a>
 				</div>

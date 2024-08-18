@@ -2,8 +2,8 @@ import styles from './ThreeBlocksSection.module.css'
 
 export default function ThreeBlocksSecionComponent() {
 	return (
-		<section className='container my-5'>
-			<div className='row text-center'>
+		<section className={`container my-5 ${styles.Container}`}>
+			<div className='row text-center mt-4'>
 				<div className='col-md-4'>
 					<div className='p-4'>
 						<div className={`${styles.iconCircle} mb-3`}>

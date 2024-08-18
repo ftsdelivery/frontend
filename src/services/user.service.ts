@@ -1,17 +1,13 @@
 import type { User } from '@/types/user.types'
 
 export const getUser = async (id: number) => {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${id}`
-	)
+	const response = await fetch(`/api/users/${id}`)
 	if (!response.ok) throw new Error('Unable to fetch user.')
 	return response.json()
 }
 
 export const getUserByEmail = async (email: any) => {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/email/${email}`
-	)
+	const response = await fetch(`/api/users/email/${email}`)
 
 	if (!response.ok) {
 		throw new Error('Unable to fetch user.')
@@ -21,9 +17,7 @@ export const getUserByEmail = async (email: any) => {
 }
 
 export const getUserIdByEmail = async (email: any) => {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/email/${email}`
-	)
+	const response = await fetch(`/api/users/email/${email}`)
 
 	if (!response.ok) {
 		throw new Error('Unable to fetch user.')
@@ -39,22 +33,17 @@ export const getUserIdByEmail = async (email: any) => {
 }
 
 export const getUserOrders = async (id: any) => {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/orders/${id}`
-	)
+	const response = await fetch(`/api/users/orders/${id}`)
 	if (!response.ok) throw new Error('Unable to fetch user orders.')
 	return response.json()
 }
 
 export const getUsers = async () => {
-	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`,
-		{
-			headers: {
-				Authorization: `Bearer ${process.env.API_KEY}`,
-			},
-		}
-	)
+	const response = await fetch(`/api/users`, {
+		headers: {
+			Authorization: `Bearer ${process.env.API_KEY}`,
+		},
+	})
 	if (!response.ok) throw new Error('Unable to fetch users.')
 	return response.json()
 }

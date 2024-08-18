@@ -10,14 +10,14 @@ import ThreeBlocksSecionComponent from '@/components/main-sections/three-blocks/
 
 export default function Page() {
 	return (
-		<div>
+		<div className='neon-gradient-background'>
 			<Navbar />
 			<MainPageCarousel />
 			<ThreeBlocksSecionComponent />
 			<NewsSectionComponent />
-			<ApplySectionComponent />
 			<AboutSectionComponent />
 			<SupportSectionComponent />
+			<ApplySectionComponent />
 			<SubmitSectionComponent />
 			<Footer />
 		</div>

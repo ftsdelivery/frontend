@@ -16,13 +16,18 @@ const NavLinks = ({ session }: { session: Session | null }) => {
 					</a>
 				</li>
 				<li className='nav-item'>
-					<a className={`nav-link ${styles.navLink}`} href='#apply'>
-						Как подать заявку?
+					<a className={`nav-link ${styles.navLink}`} href='#faq'>
+						FAQ
+					</a>
+				</li>
+				<li className='nav-item'>
+					<a className={`nav-link ${styles.navLink}`} href='#feedbacks'>
+						Отзывы
 					</a>
 				</li>
 				<li className='nav-item'>
 					<a className={`nav-link ${styles.navLink}`} href='#about'>
-						О Компании
+						О нас
 					</a>
 				</li>
 				<li className='nav-item'>
@@ -31,7 +36,7 @@ const NavLinks = ({ session }: { session: Session | null }) => {
 					</a>
 				</li>
 				<li className='nav-item'>
-					<a className={`nav-link ${styles.SubmitButon}`} href='#submit'>
+					<a className={`nav-link ms-3 ${styles.SubmitButon}`} href='#submit'>
 						Подать заявку
 					</a>
 				</li>

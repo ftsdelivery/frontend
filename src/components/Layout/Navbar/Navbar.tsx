@@ -8,6 +8,7 @@ import LoginButton from './LoginButton'
 import LogoComponent from './LogoComponent'
 import MobileToggle from './MobileToggle'
 import NavLinks from './NavLinks'
+import styles from './Navbar.module.css'
 
 const Navbar = () => {
 	const [session, setSession] = useState<Session | null>(null)
@@ -21,9 +22,9 @@ const Navbar = () => {
 	}, [])
 
 	return (
-		<nav className='navbar navbar-expand-lg navbar-light bg-light'>
-			<div className='container'>
-				<LogoComponent width={175} height={175} />
+		<nav className={`navbar navbar-expand-lg ${styles.NavBar}`}>
+			<div className={`container ${styles.Container}`}>
+				<LogoComponent width={125} height={125} />
 				<MobileToggle />
 				<NavLinks session={session} />
 				<div className='d-none d-lg-flex'>

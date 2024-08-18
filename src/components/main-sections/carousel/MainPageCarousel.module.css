@@ -1,0 +1,31 @@
+.carousel_container {
+	max-width: 1920px; /* Максимальная ширина */
+	margin: 0 auto; /* Центрирование карусели */
+}
+
+.Block {
+	width: 100№;
+}
+/* @media (max-width: 1200px) {
+	.carousel_container {
+		padding: 0 20rem;
+	}
+}
+
+@media (max-width: 992px) {
+	.faqSection {
+		padding: 0 5rem;
+	}
+}
+
+@media (max-width: 768px) {
+	.faqSection {
+		padding: 0 2rem;
+	}
+}
+
+@media (max-width: 576px) {
+	.faqSection {
+		padding: 0 1rem;
+	}
+} */

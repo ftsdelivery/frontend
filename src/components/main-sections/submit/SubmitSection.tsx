@@ -126,7 +126,7 @@ export default function SubmitSectionComponent() {
 					</label>
 					<input
 						type='text'
-						className='form-control'
+						className={`form-control ${styles.Input}`}
 						id='ip'
 						placeholder='Введите ваш ИП'
 						required
@@ -137,7 +137,7 @@ export default function SubmitSectionComponent() {
 						Маркетплейс:
 					</label>
 					<select
-						className='form-select'
+						className={`form-select ${styles.Select}`}
 						id='marketPlace'
 						value={marketPlace}
 						onChange={e => setMarketPlace(e.target.value)}
@@ -153,7 +153,11 @@ export default function SubmitSectionComponent() {
 					<label htmlFor='warehouse' className='form-label'>
 						Склад:
 					</label>
-					<select className='form-select' id='warehouse' required>
+					<select
+						className={`form-select ${styles.Select}`}
+						id='warehouse'
+						required
+					>
 						<option value=''>Сначала выберите маркетплейс</option>
 						{warehouses.map((warehouse, index) => (
 							<option key={index} value={warehouse}>
@@ -166,7 +170,11 @@ export default function SubmitSectionComponent() {
 					<label htmlFor='deliveryType' className='form-label'>
 						Тип доставки:
 					</label>
-					<select className='form-select' id='deliveryType' required>
+					<select
+						className={`form-select ${styles.Select}`}
+						id='deliveryType'
+						required
+					>
 						<option value='Паллеты'>Палеты</option>
 						<option value='Коробки'>Коробки</option>
 					</select>
@@ -177,7 +185,7 @@ export default function SubmitSectionComponent() {
 					</label>
 					<input
 						type='number'
-						className='form-control'
+						className={`form-control ${styles.Input}`}
 						id='quantity'
 						placeholder='Введите количество'
 						required
@@ -187,7 +195,11 @@ export default function SubmitSectionComponent() {
 					<label htmlFor='extraServices' className='form-label'>
 						Доп. услуги:
 					</label>
-					<select className='form-select' id='extraServices' required>
+					<select
+						className={`form-select ${styles.Select}`}
+						id='extraServices'
+						required
+					>
 						<option value='Без доп. услуг'>Без доп. услуг</option>
 						<option value='Паллет'>Палет</option>
 						<option value='Паллетирование'>Палетирование</option>
@@ -200,7 +212,7 @@ export default function SubmitSectionComponent() {
 					</label>
 					<input
 						type='date'
-						className='form-control'
+						className={`form-control ${styles.Input}`}
 						id='pickupDate'
 						value={selectedDate}
 						onChange={e => setSelectedDate(e.target.value)}
@@ -212,7 +224,11 @@ export default function SubmitSectionComponent() {
 					<label htmlFor='pickupTime' className='form-label'>
 						Время забора:
 					</label>
-					<select className='form-select' id='pickupTime' required>
+					<select
+						className={`form-select ${styles.Select}`}
+						id='pickupTime'
+						required
+					>
 						{availableTimeSlots.length > 0 ? (
 							availableTimeSlots.map((slot, index) => (
 								<option key={index} value={slot}>
@@ -230,7 +246,7 @@ export default function SubmitSectionComponent() {
 					</label>
 					<input
 						type='text'
-						className='form-control'
+						className={`form-control ${styles.Input}`}
 						id='pickupAddress'
 						placeholder='Введите адрес забора'
 						required
@@ -242,7 +258,7 @@ export default function SubmitSectionComponent() {
 					</label>
 					<input
 						type='text'
-						className='form-control'
+						className={`form-control ${styles.Input}`}
 						id='contactInfo'
 						placeholder='Введите контактные данные'
 						required
@@ -253,7 +269,7 @@ export default function SubmitSectionComponent() {
 						Комментарий:
 					</label>
 					<textarea
-						className='form-control'
+						className={`form-control ${styles.Input}`}
 						id='comment'
 						rows={3}
 						placeholder='Введите ваш комментарий'
@@ -277,7 +293,7 @@ export default function SubmitSectionComponent() {
 						</label>
 						<input
 							type='text'
-							className='form-control'
+							className={`form-control ${styles.Input}`}
 							id='promoCode'
 							placeholder='Промокод'
 						/>

@@ -1,8 +1,7 @@
 import { Order } from '@/types/order.types'
-const BASE_URL = 'http://localhost:3000'
 
 export const getAllOrders = async () => {
-	const response = await fetch(`${BASE_URL}/api/orders`, {
+	const response = await fetch(`/api/orders`, {
 		headers: {
 			Authorization: `Bearer ${process.env.API_KEY}`,
 		},
@@ -12,7 +11,7 @@ export const getAllOrders = async () => {
 }
 
 export const getOrdersByDate = async (date: string) => {
-	const response = await fetch(`${BASE_URL}/api/orders/date/${date}`, {
+	const response = await fetch(`/api/orders/date/${date}`, {
 		headers: {
 			Authorization: `Bearer ${process.env.API_KEY}`,
 		},
@@ -22,7 +21,7 @@ export const getOrdersByDate = async (date: string) => {
 }
 
 export const getOrderById = async (id: number) => {
-	const response = await fetch(`${BASE_URL}/api/orders/${id}`, {
+	const response = await fetch(`/api/orders/${id}`, {
 		headers: {
 			Authorization: `Bearer ${process.env.API_KEY}`,
 		},
@@ -39,7 +38,7 @@ export const getOrderByUserId = async (userId: number) => {
 }
 
 export const createOrder = async (order: Order) => {
-	const response = await fetch('/api/orders', {
+	const response = await fetch(`/api/orders`, {
 		method: 'POST',
 		body: JSON.stringify(order),
 		headers: {

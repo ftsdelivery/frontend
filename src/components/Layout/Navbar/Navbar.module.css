@@ -1,9 +1,23 @@
-/* Navbar.module.css */
+.NavBar {
+	position: fixed; /* Фиксированное позиционирование */
+	top: 0; /* Закрепление наверху страницы */
+	width: 100%; /* Полная ширина */
+	z-index: 1000; /* Убедитесь, что navbar находится поверх других элементов */
+	background-color: rgba(2, 2, 20, 0.8);
+	backdrop-filter: blur(10px); /* Эффект размытия */
+	padding: 0px 20px; /* Внутренние отступы, чтобы контент не прилипал к краям */
+	height: 85px;
+}
 
 .navLink {
 	position: relative;
 	display: inline-block;
 	padding-bottom: 10px;
+	color: rgb(195, 195, 195);
+}
+
+.navLink:hover {
+	color: white;
 }
 
 .navLink::after {
@@ -23,8 +37,29 @@
 }
 
 .LoginButton {
-	border-radius: 10px;
-	height: 45px;
+	transition: 0.2s;
+	background: linear-gradient(
+		145deg,
+		#007bff,
+		#0062cc
+	); /* Градиент для выпуклости */
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Тень для эффекта выпуклости */
+}
+
+.LoginButton:hover {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Увеличенная тень при наведении */
+	background: linear-gradient(
+		145deg,
+		#0069d9,
+		#005bb5
+	); /* Более тёмный градиент при наведении */
 }
 
 .MobileLoginButton {
@@ -32,9 +67,9 @@
 }
 
 .SubmitButon {
-	border: 2px solid #007bff;
+	border: 2px solid #0d6efd;
 	border-radius: 10px;
-	color: #007bff;
+	color: #0d6efd;
 	display: flex;
 	justify-content: center;
 }
@@ -43,4 +78,27 @@
 	border: 2px solid #007bff;
 	border-radius: 10px;
 	color: #007bff;
+}
+
+@media (max-width: 1200px) {
+}
+
+@media (max-width: 992px) {
+	.NavBar {
+		position: relative; /* Отменяет фиксированное позиционирование */
+		top: auto; /* Убирает привязку к верху страницы */
+		height: 75px;
+		/* Позволяет высоте адаптироваться к содержимому */
+	}
+}
+
+@media (max-width: 768px) {
+	.NavBar {
+		position: relative; /* Отменяет фиксированное позиционирование */
+		top: auto; /* Убирает привязку к верху страницы */
+		height: auto; /* Позволяет высоте адаптироваться к содержимому */
+	}
+}
+
+@media (max-width: 576px) {
 }

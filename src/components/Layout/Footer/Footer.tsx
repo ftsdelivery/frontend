@@ -1,10 +1,7 @@
 export default function Footer() {
 	return (
-		<footer
-			className={`bg-light text-center text-lg-start`}
-			style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}
-		>
-			<div style={{ backgroundColor: '#007bffcb', color: 'white' }}>
+		<footer className={`bg-light text-center text-lg-start`}>
+			<div>
 				<div className='container p-4'>
 					<div className='row'>
 						{/* О нас */}
@@ -74,10 +71,7 @@ export default function Footer() {
 			</div>
 
 			{/* Подвал */}
-			<div
-				className='text-center p-3'
-				style={{ backgroundColor: '#007bffcb', color: 'white' }}
-			>
+			<div className='text-center p-3'>
 				© {new Date().getFullYear()} FTS Delivery. Все права защищены.
 			</div>
 		</footer>

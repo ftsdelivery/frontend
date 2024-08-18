@@ -1,10 +1,8 @@
 import { DataProvider, fetchUtils } from 'react-admin'
 
-const BASE_URL = 'http://localhost:3000'
-
 export const dataProvider: DataProvider = {
 	getList: async (resource: string, params: any) => {
-		const url = `${BASE_URL}/api/${resource}`
+		const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/${resource}`
 
 		const options = {
 			headers: new Headers({
@@ -20,7 +18,7 @@ export const dataProvider: DataProvider = {
 		}
 	},
 	getOne: async (resource: string, params: any) => {
-		const url = `${BASE_URL}/api/${resource}/${params.id}`
+		const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/${resource}/${params.id}`
 		const options = {
 			headers: new Headers({
 				Authorization: `Bearer ${process.env.API_KEY}`,
@@ -31,7 +29,9 @@ export const dataProvider: DataProvider = {
 		return { data: response.json.data }
 	},
 	getMany: async (resource: string, params: any) => {
-		const url = `${BASE_URL}/api/${resource}?id=${params.ids.join(',')}`
+		const url = `${
+			process.env.NEXT_PUBLIC_BASE_URL
+		}/api/${resource}?id=${params.ids.join(',')}`
 		const options = {
 			headers: new Headers({
 				Authorization: `Bearer ${process.env.API_KEY}`,
@@ -42,7 +42,7 @@ export const dataProvider: DataProvider = {
 		return { data: response.json }
 	},
 	getManyReference: async (resource: string, params: any) => {
-		const url = `${BASE_URL}/api/${resource}?${params.target}=${params.id}`
+		const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/${resource}?${params.target}=${params.id}`
 		const options = {
 			headers: new Headers({
 				Authorization: `Bearer ${process.env.API_KEY}`,
@@ -56,7 +56,7 @@ export const dataProvider: DataProvider = {
 		}
 	},
 	create: async (resource: string, params: any) => {
-		const url = `${BASE_URL}/api/${resource}`
+		const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/${resource}`
 		const options = {
 			method: 'POST',
 			body: JSON.stringify(params.data),
@@ -70,7 +70,7 @@ export const dataProvider: DataProvider = {
 		return { data: response.json.data }
 	},
 	update: async (resource: string, params: any) => {
-		const url = `${BASE_URL}/api/${resource}/${params.id}`
+		const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/${resource}/${params.id}`
 		const options = {
 			method: 'PUT',
 			body: JSON.stringify(params.data),
@@ -84,7 +84,7 @@ export const dataProvider: DataProvider = {
 		return { data: response.json.data }
 	},
 	updateMany: async (resource: string, params: any) => {
-		const url = `${BASE_URL}/api/${resource}`
+		const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/${resource}`
 		const options = {
 			method: 'PUT',
 			body: JSON.stringify(params.data),
@@ -98,7 +98,7 @@ export const dataProvider: DataProvider = {
 		return { data: response.json.data }
 	},
 	delete: async (resource: string, params: any) => {
-		const url = `${BASE_URL}/api/${resource}/${params.id}`
+		const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/${resource}/${params.id}`
 		const options = {
 			method: 'DELETE',
 			headers: new Headers({
@@ -110,7 +110,7 @@ export const dataProvider: DataProvider = {
 		return { data: response.json.data }
 	},
 	deleteMany: async (resource: string, params: any) => {
-		const url = `${BASE_URL}/api/${resource}`
+		const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/${resource}`
 		const options = {
 			method: 'DELETE',
 			body: JSON.stringify(params.ids),

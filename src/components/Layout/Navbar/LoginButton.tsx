@@ -7,14 +7,14 @@ const LoginButton = ({ session }: { session: Session | null }) => {
 
 	return session ? (
 		<button
-			className={`btn btn-primary ${styles.LoginButton}`}
+			className={`btn ${styles.LoginButton}`}
 			onClick={() => router.push('/account')}
 		>
 			Личный кабинет
 		</button>
 	) : (
 		<button
-			className={`btn btn-primary ${styles.LoginButton}`}
+			className={`btn ${styles.LoginButton}`}
 			type='button'
 			data-bs-toggle='modal'
 			data-bs-target='#loginModal'

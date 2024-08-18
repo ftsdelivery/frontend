@@ -7,8 +7,18 @@
 	align-items: center;
 	justify-content: center;
 	margin: 0 auto; /* Центрирует иконку */
+	box-shadow: 0px 0px 15px 5px rgba(11, 99, 246, 1);
 }
 
+.Container {
+	border: 1px solid #ffffff00; /* Цвет рамки */
+	border-radius: 10px; /* Закругляет углы */
+	color: hsl(215, 15%, 92%);
+	border-color: hsla(210, 100%, 38%, 0.8);
+	background-color: hsla(210, 100%, 30%, 0.2);
+	box-shadow: hsla(200, 10%, 4%, 0.2) 0 -3px 1px inset,
+		hsl(210, 14%, 7%) 0 2px 3px 0;
+}
 .iconWhite {
 	color: #fff; /* Белый цвет иконки */
 }

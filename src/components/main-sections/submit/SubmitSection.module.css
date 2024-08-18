@@ -1,10 +1,23 @@
 .container {
 	padding: 0 20rem;
+	color: hsl(215, 15%, 92%);
 }
 
+.Input,
+.Select {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
+	color: hsl(215, 15%, 92%);
+}
+
+.Input:focus {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 2px solid hsla(210, 100%, 38%, 0.8);
+	color: hsl(215, 15%, 92%);
+}
 @media (max-width: 1200px) {
 	.container {
-		padding: 0 20rem;
+		padding: 0 10rem;
 	}
 }
 

@@ -1,4 +1,3 @@
-import Logo from '@/../../public/logo/logo_v1.svg'
 import Image from 'next/image'
 
 interface LogoComponentProps {
@@ -7,8 +6,13 @@ interface LogoComponentProps {
 }
 
 const LogoComponent: React.FC<LogoComponentProps> = ({ width, height }) => (
-	<a className='navbar-brand' href='/'>
-		<Image src={Logo} alt='Logo' width={width} height={height} />
+	<a className='navbar-brand mt-3' href='/'>
+		<Image
+			src={`${process.env.BASE_URL}/logo/logo_v1.svg`}
+			alt='Logo'
+			width={width}
+			height={height}
+		/>
 	</a>
 )
 
