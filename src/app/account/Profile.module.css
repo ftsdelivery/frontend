@@ -1,3 +1,146 @@
+.Main {
+	background: rgb(3, 2, 20);
+	background: linear-gradient(
+		180deg,
+		rgba(3, 2, 20, 1) 15%,
+		rgba(12, 12, 56, 1) 47%,
+		rgba(2, 0, 36, 1) 85%
+	);
+}
+
 .container {
 	min-height: 700px;
+}
+
+.navLink {
+	position: relative;
+	display: inline-block;
+	padding-bottom: 10px;
+	color: rgb(195, 195, 195);
+}
+
+.card {
+	border: 1px solid #ffffff00; /* Цвет рамки */
+	border-radius: 10px; /* Закругляет углы */
+	color: hsl(215, 15%, 92%);
+	border-color: hsla(210, 100%, 38%, 0.8);
+	background-color: hsla(210, 100%, 30%, 0.2);
+	box-shadow: hsla(200, 10%, 4%, 0.2) 0 -3px 1px inset,
+		hsl(210, 14%, 7%) 0 2px 3px 0;
+}
+
+/* Основной стиль аккордеона */
+.accordion {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	margin: 0 auto;
+	max-width: 800px; /* Можно настроить ширину по вашему желанию */
+}
+
+/* Стили для элементов аккордеона */
+.accordion_item {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
+}
+
+/* Заголовок аккордеона */
+.accordion_header {
+	background-color: hsla(210, 100%, 30%, 0.2);
+}
+
+/* Кнопка аккордеона (свернутое состояние) */
+.accordion_button {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	color: hsl(215, 15%, 92%); /* Цвет текста в свернутом состоянии */
+}
+
+/* Кнопка аккордеона (раскрытое состояние) */
+.accordion_button:not(.collapsed) {
+	background-color: hsla(
+		210,
+		100%,
+		30%,
+		0.3
+	); /* Цвет фона для раскрытого состояния */
+	color: hsl(215, 15%, 92%); /* Цвет текста в раскрытом состоянии */
+}
+
+/* Содержимое аккордеона */
+.accordion-collapse {
+	background-color: hsla(
+		210,
+		100%,
+		30%,
+		0.3
+	); /* Цвет фона содержимого аккордеона */
+	color: hsl(215, 15%, 92%); /* Цвет текста внутри аккордеона */
+}
+
+/* Убедитесь, что цвет фона не перекрывается */
+.accordion-body {
+	background-color: hsla(
+		210,
+		100%,
+		30%,
+		0.3
+	); /* Цвет фона для содержимого аккордеона */
+	color: hsl(215, 15%, 92%); /* Цвет текста внутри содержимого */
+}
+
+/* Цвет стрелки в раскрытом состоянии */
+.accordion_button:not(.collapsed)::after {
+	color: hsl(215, 15%, 92%); /* Цвет стрелки в раскрытом состоянии */
+}
+
+.list_group_item {
+	background-color: hsla(210, 100%, 30%, 0.3);
+	color: hsl(215, 15%, 92%);
+}
+
+.promoCodeButton {
+	color: hsl(215, 15%, 92%);
+	text-decoration: none;
+}
+
+.col_2 {
+	max-width: 200px;
+}
+
+.form_control {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
+	color: white;
+}
+
+.form_control::placeholder {
+	color: hsl(215, 15%, 92%);
+}
+
+.form_control:focus {
+	background-color: hsla(210, 100%, 30%, 0.4);
+	border: 1px solid hsla(210, 100%, 38%, 1);
+	color: hsl(215, 15%, 92%);
+}
+
+.option_pending {
+	background-color: orange;
+	color: hsl(215, 15%, 92%);
+	font-weight: bold;
+}
+
+.option_confirmed {
+	background-color: blue;
+	color: white;
+	font-weight: bold;
+}
+
+.option_delivered {
+	background-color: green;
+	color: white;
+	font-weight: bold;
+}
+
+.option_canceled {
+	background-color: red;
+	color: white;
+	font-weight: bold;
 }

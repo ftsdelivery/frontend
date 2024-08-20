@@ -1,11 +1,16 @@
-/* Loader.css */
-
 .loader {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
 	height: 100vh;
+	background: rgb(3, 2, 20);
+	background: linear-gradient(
+		180deg,
+		rgba(3, 2, 20, 1) 15%,
+		rgba(12, 12, 56, 1) 47%,
+		rgba(2, 0, 36, 1) 85%
+	);
 }
 
 .loader-inner {

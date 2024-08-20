@@ -1,9 +1,3 @@
-/* body {
-	background-color: #080808;
-	color: white;
-	padding-top: 75px;
-} */
-
 .neon-gradient-background {
 	background: rgb(3, 2, 20);
 	background: linear-gradient(
@@ -21,11 +15,11 @@
 }
 
 ::-webkit-scrollbar-track {
-	background: #ffffff; /* Цвет фона трека */
+	background: #ffffff00; /* Цвет фона трека */
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: #0c0c38; /* Цвет ползунка */
+	background-color: #464694; /* Цвет ползунка */
 	border-radius: 10px; /* Округление углов ползунка */
 	border: 3px solid #444444; /* Отступы внутри трека (чтобы был виден фон трека) */
 }
@@ -34,9 +28,10 @@
 	background-color: #1f2678; /* Цвет ползунка при наведении */
 }
 
-/* Стили для Firefox */
+/* FireFox */
+
 * {
-	scrollbar-width: thin; /* Устанавливаем тонкий скроллбар */
+	scrollbar-width: thin;
 	scrollbar-color: #111648 #444444; /* Цвет ползунка и трека */
 }
 

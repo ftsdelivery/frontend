@@ -52,8 +52,7 @@ const NavLinks = ({ session }: { session: Session | null }) => {
 						<button
 							className={`btn btn-primary w-100 mt-3 ${styles.MobileLoginButton}`}
 							type='button'
-							data-bs-toggle='modal'
-							data-bs-target='#loginModal'
+							onClick={() => router.push('/signin')}
 						>
 							Личный кабинет
 						</button>

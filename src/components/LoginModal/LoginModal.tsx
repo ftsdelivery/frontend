@@ -6,6 +6,7 @@ import React, { useState } from 'react'
 import PasswordStrengthBar from 'react-password-strength-bar'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import styles from './LoginModal.module.css'
 
 export default function SignInForm() {
 	const [isRegistering, setIsRegistering] = useState(false)
@@ -136,7 +137,7 @@ export default function SignInForm() {
 
 	return (
 		<div
-			className='modal fade'
+			className={`modal fade ${styles.ModalMain}`}
 			id='loginModal'
 			tabIndex={-1}
 			aria-labelledby='loginModalLabel'

@@ -1,70 +1,88 @@
 import { Order } from '@/types/order.types'
 
 export const getAllOrders = async () => {
-	const response = await fetch(`/api/orders`, {
-		headers: {
-			Authorization: `Bearer ${process.env.API_KEY}`,
-		},
-	})
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders`,
+		{
+			headers: {
+				Authorization: `Bearer ${process.env.API_KEY}`,
+			},
+		}
+	)
 	if (!response.ok) throw new Error('Unable to fetch orders.')
 	return response.json()
 }
 
 export const getOrdersByDate = async (date: string) => {
-	const response = await fetch(`/api/orders/date/${date}`, {
-		headers: {
-			Authorization: `Bearer ${process.env.API_KEY}`,
-		},
-	})
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/date/${date}`,
+		{
+			headers: {
+				Authorization: `Bearer ${process.env.API_KEY}`,
+			},
+		}
+	)
 	if (!response.ok) throw new Error('Unable to fetch orders.')
 	return response.json()
 }
 
 export const getOrderById = async (id: number) => {
-	const response = await fetch(`/api/orders/${id}`, {
-		headers: {
-			Authorization: `Bearer ${process.env.API_KEY}`,
-		},
-	})
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/${id}`,
+		{
+			headers: {
+				Authorization: `Bearer ${process.env.API_KEY}`,
+			},
+		}
+	)
 	console.log(response)
 	return response.json()
 }
 
 export const getOrderByUserId = async (userId: number) => {
-	const response = await fetch(`/api/orders`)
+	const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders`)
 	if (!response.ok) throw new Error('Unable to fetch orders.')
 	const orders = await response.json()
 	return orders
 }
 
 export const createOrder = async (order: Order) => {
-	const response = await fetch(`/api/orders`, {
-		method: 'POST',
-		body: JSON.stringify(order),
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	})
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders`,
+		{
+			method: 'POST',
+			body: JSON.stringify(order),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}
+	)
 	if (!response.ok) throw new Error('Unable to create order.')
 	return response.json()
 }
 
 export const updateOrder = async (id: number, order: Order) => {
-	const response = await fetch(`/api/orders/${id}`, {
-		method: 'PUT',
-		body: JSON.stringify(order),
-		headers: {
-			'Content-Type': 'application/json',
-		},
-	})
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/${id}`,
+		{
+			method: 'PUT',
+			body: JSON.stringify(order),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}
+	)
 	if (!response.ok) throw new Error('Unable to update order.')
 	return response.json()
 }
 
 export const deleteOrder = async (id: number) => {
-	const response = await fetch(`/api/orders/${id}`, {
-		method: 'DELETE',
-	})
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/${id}`,
+		{
+			method: 'DELETE',
+		}
+	)
 	if (!response.ok) throw new Error('Unable to delete order.')
 	return response.json()
 }
@@ -79,7 +97,9 @@ export const checkAvailableTimeSlots = async (date: string) => {
 	]
 
 	try {
-		const response = await fetch(`/api/orders/date/${date}`)
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_BASE_URL}/api/orders/date/${date}`
+		)
 
 		// Если сервер вернул 404, значит на эту дату нет заказов
 		if (response.status === 404) {

@@ -16,8 +16,7 @@ const LoginButton = ({ session }: { session: Session | null }) => {
 		<button
 			className={`btn ${styles.LoginButton}`}
 			type='button'
-			data-bs-toggle='modal'
-			data-bs-target='#loginModal'
+			onClick={() => router.push('/signin')}
 		>
 			Личный кабинет
 		</button>

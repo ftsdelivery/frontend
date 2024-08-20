@@ -1,0 +1,89 @@
+.Main {
+	background: rgb(3, 2, 20);
+	background: linear-gradient(
+		180deg,
+		rgba(3, 2, 20, 1) 15%,
+		rgba(12, 12, 56, 1) 47%,
+		rgba(2, 0, 36, 1) 85%
+	);
+	width: 100%;
+	height: 100vh;
+}
+
+.Container {
+	border: 2px solid #ffffff00;
+}
+
+.text_center {
+	color: hsl(0, 0%, 100%);
+}
+.form_label {
+	color: hsl(0, 0%, 100%);
+}
+
+.form_control {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
+	color: white;
+}
+.form_control::placeholder {
+	color: hsl(215, 15%, 92%);
+}
+
+.form_control:focus {
+	background-color: hsla(210, 100%, 30%, 0.4);
+	border: 1px solid hsla(210, 100%, 38%, 1);
+	color: white;
+}
+
+.Button {
+	background-color: #edf0f3;
+	border: none;
+	border-radius: 2px;
+	padding: 10px 20px;
+	width: 70%;
+}
+
+.input_group_text {
+	color: hsl(215, 15%, 92%);
+	background-color: hsla(210, 100%, 30%, 0.4);
+	border: 1px solid hsla(210, 100%, 38%, 1);
+}
+
+.toggle_button {
+	color: hsl(215, 15%, 92%);
+	text-decoration: none;
+	display: flex;
+	justify-content: center;
+}
+
+.toggle_button:hover {
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
+	color: hsl(215, 15%, 92%);
+}
+
+.LoginButton {
+	transition: 0.2s;
+	background: linear-gradient(
+		145deg,
+		#007bff,
+		#0062cc
+	); /* Градиент для выпуклости */
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Тень для эффекта выпуклости */
+}
+
+.LoginButton:hover {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Увеличенная тень при наведении */
+	background: linear-gradient(
+		145deg,
+		#0069d9,
+		#005bb5
+	); /* Более тёмный градиент при наведении */
+}

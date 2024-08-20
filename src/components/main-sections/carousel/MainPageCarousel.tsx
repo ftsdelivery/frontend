@@ -12,21 +12,21 @@ export default function MainPageCarousel() {
 					<div className='carousel-inner'>
 						<div className='carousel-item active' data-bs-interval='5000'>
 							<img
-								src='https://fts-delivery.vercel.app/carousel/test_image.jpg'
+								src={`${process.env.NEXT_PUBLIC_BASE_URL}/carousel/test_image.jpg`}
 								className='d-block w-100'
 								alt='...'
 							/>
 						</div>
 						<div className='carousel-item' data-bs-interval='5000'>
 							<img
-								src='https://fts-delivery.vercel.app/carousel/test_image.jpg'
+								src={`${process.env.NEXT_PUBLIC_BASE_URL}/carousel/test_image.jpg`}
 								className='d-block w-100'
 								alt='...'
 							/>
 						</div>
 						<div className='carousel-item' data-bs-interval='5000'>
 							<img
-								src='https://fts-delivery.vercel.app/carousel/test_image.jpg'
+								src={`${process.env.NEXT_PUBLIC_BASE_URL}/carousel/test_image.jpg`}
 								className='d-block w-100'
 								alt='...'
 							/>

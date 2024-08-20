@@ -15,6 +15,7 @@
 	border: 2px solid hsla(210, 100%, 38%, 0.8);
 	color: hsl(215, 15%, 92%);
 }
+
 @media (max-width: 1200px) {
 	.container {
 		padding: 0 10rem;
@@ -37,4 +38,190 @@
 	.container {
 		padding: 0 1rem;
 	}
+}
+
+.warehouseContainer {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 10px;
+	max-height: 300px; /* Высота контейнера для скроллинга */
+	overflow-y: auto;
+	border: 1px solid #ddd; /* Для визуального разделения */
+	padding: 10px;
+	border-radius: 5px;
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
+}
+
+.warehouseButton {
+	flex: 0 1 calc(50% - 10px); /* Каждая кнопка занимает половину строки */
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 10px;
+	text-align: left;
+	transition: background-color 0.3s ease, color 0.3s ease;
+	background-color: none;
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
+	color: hsl(215, 15%, 92%);
+}
+
+.warehouseButton:hover {
+	background-color: hsla(210, 100%, 30%, 0.4);
+	border: 1px solid hsla(210, 100%, 38%, 1);
+	color: hsl(215, 15%, 92%);
+}
+.warehouseButton h6 {
+	font-size: 14px;
+	margin-bottom: 4px;
+	color: hsl(215, 15%, 92%);
+}
+
+.warehouseButton p {
+	font-size: 12px;
+	color: hsl(215, 15%, 92%);
+	margin-bottom: 0;
+}
+
+.badge {
+	font-size: 10px;
+}
+
+.selected {
+	background-color: #007bff; /* Цвет фона для выбранной кнопки */
+	color: #fff; /* Цвет текста для выбранной кнопки */
+	border-color: #007bff; /* Цвет границы для выбранной кнопки */
+}
+
+.form_control {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
+	color: white;
+}
+
+.form_control::placeholder {
+	color: hsl(215, 15%, 92%);
+}
+
+.form_control:focus {
+	background-color: hsla(210, 100%, 30%, 0.4);
+	border: 1px solid hsla(210, 100%, 38%, 1);
+	color: hsl(215, 15%, 92%);
+}
+
+.radio_group {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 15px;
+}
+
+.radio_button {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 1px solid hsla(210, 100%, 38%, 1);
+	transition: 0.2s;
+	color: white;
+	padding: 15px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+
+	cursor: pointer;
+}
+
+.radio_button:hover {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	color: hsl(215, 15%, 92%);
+}
+
+.radio_button:checked {
+	border: 1px solid hsla(210, 100%, 38%, 1);
+	border-radius: 10px;
+	transition: 0.2s;
+	background: linear-gradient(145deg, #007bff, #0062cc);
+}
+
+.radio_button_delivery_type {
+	padding: 15px;
+	font-size: 16px;
+	border-radius: 10px;
+}
+
+.TestContainer {
+	border: 1px solid #ddd; /* Для визуального разделения */
+	padding: 10px;
+	border-radius: 5px;
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
+}
+
+.badge {
+	font-size: 12px;
+	background-color: rgb(11, 166, 27);
+}
+
+.check_button {
+	display: flex;
+	justify-content: space-between;
+}
+
+.Container_2 {
+	border-top: 2px solid hsla(210, 100%, 38%, 0.8);
+}
+
+.SubmitButton {
+	transition: 0.2s;
+	background: linear-gradient(
+		145deg,
+		#007bff,
+		#0062cc
+	); /* Градиент для выпуклости */
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Тень для эффекта выпуклости */
+}
+
+.SubmitButton:hover {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Увеличенная тень при наведении */
+	background: linear-gradient(
+		145deg,
+		#0069d9,
+		#005bb5
+	); /* Более тёмный градиент при наведении */
+}
+
+.radio_button_btn {
+	border: 1px solid hsla(210, 100%, 38%, 1);
+	color: hsla(210, 100%, 38%, 1);
+}
+
+.esrte_container {
+	border-bottom: 2px solid hsla(210, 100%, 38%, 0.8);
+	margin-bottom: 15px;
+}
+
+.Icon {
+	border-radius: 7px;
+}
+
+.promoCodeButton {
+	color: hsl(215, 15%, 92%);
+	text-decoration: none;
+}
+
+.promoCodeButton:hover {
+	color: hsl(215, 15%, 92%);
+}
+
+.priceContainer {
+	background: none;
+	border: 2px solid rgb(11, 166, 27);
+	border-radius: 10px;
+	text-align: center;
 }

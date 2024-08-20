@@ -1,0 +1,13 @@
+.Footer {
+	background-color: rgb(2, 2, 20);
+	color: hsl(215, 15%, 92%);
+}
+
+.Links li a {
+	color: white;
+	text-decoration: none;
+}
+
+.Title {
+	color: hsl(215, 15%, 92%);
+}
