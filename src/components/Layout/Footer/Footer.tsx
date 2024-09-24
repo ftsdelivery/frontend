@@ -1,6 +1,11 @@
+'use client'
+
 import styles from './Footer.module.css'
 
 export default function Footer() {
+	// useEffect(() => {
+	// 	fetch('/api/checkOverdueOrders').catch(console.error)
+	// }, [])
 	return (
 		<footer className={`bg-light text-center text-lg-start`}>
 			<div className={`${styles.Footer}`}>

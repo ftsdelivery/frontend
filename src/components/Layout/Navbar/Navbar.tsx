@@ -1,37 +1,37 @@
 'use client'
 
-import LoginModalComponent from '@/components/LoginModal/LoginModal'
-import { Session } from 'next-auth'
-import { getSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import LoginButton from './LoginButton'
-import LogoComponent from './LogoComponent'
 import MobileToggle from './MobileToggle'
 import NavLinks from './NavLinks'
 import styles from './Navbar.module.css'
 
 const Navbar = () => {
-	const [session, setSession] = useState<Session | null>(null)
-
-	useEffect(() => {
-		const fetchSession = async () => {
-			const session = await getSession()
-			setSession(session)
-		}
-		fetchSession()
-	}, [])
-
+	const { data: session } = useSession()
+	const router = useRouter()
 	return (
 		<nav className={`navbar navbar-expand-lg ${styles.NavBar}`}>
 			<div className={`container ${styles.Container}`}>
-				<LogoComponent width={125} height={125} />
+				<a
+					className='navbar-brand mt-3'
+					style={{ cursor: 'pointer' }}
+					onClick={() => router.push('/')}
+				>
+					<Image
+						src={`${process.env.NEXT_PUBLIC_BASE_URL}/images/logo/logo_v1.svg`}
+						alt='Logo'
+						width={125}
+						height={125}
+					/>
+				</a>
 				<MobileToggle />
 				<NavLinks session={session} />
 				<div className='d-none d-lg-flex'>
-					<LoginButton session={session} />
+					<LoginButton />
 				</div>
 			</div>
-			<LoginModalComponent />
 		</nav>
 	)
 }

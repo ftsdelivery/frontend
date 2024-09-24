@@ -1,0 +1,202 @@
+.table_container {
+	overflow-x: auto;
+}
+
+.flex_grow {
+	flex-grow: 1;
+	white-space: nowrap;
+}
+
+.overdue {
+	background-color: rgb(198, 18, 198);
+}
+
+.btn_primary {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #007bff, #0062cc);
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_sucess {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #28a745);
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_secondary {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #6c757d);
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_warning {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #ffc107);
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_danger {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #dc3545);
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_danger_outline {
+	transition: 0.2s;
+	background: transparent;
+	color: #dc3545;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: 2px solid #dc3545;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.badge_danger {
+	background: linear-gradient(145deg, #dc3545, #c82333);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.badge_success {
+	background: linear-gradient(145deg, #28a745, #218838);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.badge_warning {
+	background: linear-gradient(145deg, #ffc107, #e0a800);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.badge_primary {
+	background: linear-gradient(145deg, #007bff, #0056b3);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.badge_overdue {
+	background: linear-gradient(145deg, #800080, #8a2be2);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.badge_dark {
+	background: linear-gradient(145deg, #343a40, #23272b);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.badge_gray {
+	background: linear-gradient(145deg, #6c757d, #495057);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.triangle::before {
+	background: linear-gradient(145deg, #ff4500, #ff6347);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	text-shadow: 0 0 6px rgba(255, 0, 0, 0.9);
+	font-size: 1.2rem;
+}
+
+.tableContainer {
+	width: 100%;
+	overflow-x: auto; /* Горизонтальная прокрутка, если содержимое превышает ширину */
+}
+
+.tableWrapper {
+	width: 100%;
+	overflow-x: auto; /* Горизонтальная прокрутка, если содержимое превышает ширину */
+}
+
+.table {
+	min-width: 1000px; /* Устанавливает минимальную ширину для таблицы */
+}
+
+.collapsedCell {
+	max-height: 100px;
+	overflow: hidden;
+	position: relative;
+}
+
+.table_container_responsive {
+	padding-right: var(--content-padding);
+}
+
+.loader {
+	width: 60px;
+	height: 60px;
+	border: 8px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 8px solid #3498db;
+	animation: spin 1s linear infinite;
+	margin: auto;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.active_button.active {
+	background-color: #007bff;
+	color: white;
+}

@@ -1,0 +1,188 @@
+.btn_primary {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #007bff, #0062cc);
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_primary_outline {
+	transition: 0.2s;
+	background: transparent;
+	color: #007bff;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: 2px solid #007bff;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	transition: all 0.1s ease-in-out;
+}
+
+.btn_primary_outline:hover {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	background: linear-gradient(145deg, #0069d9, #005bb5);
+	border: 2px solid rgb(0, 0, 0, 0);
+	color: white;
+}
+
+.btn_success {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #28a745, #218838);
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_success_outline {
+	transition: 0.2s;
+	background: transparent;
+	color: #28a745;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: 2px solid #28a745;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_success_outline:hover {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	background: linear-gradient(145deg, #28a745, #218838);
+	border: 2px solid rgb(0, 0, 0, 0);
+	color: white;
+}
+
+.btn_secondary {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #6c757d, #5a6268);
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_secondary_outline {
+	transition: 0.2s;
+	background: transparent;
+	color: #6c757d;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: 2px solid #6c757d;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_secondary_outline:hover {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	background: linear-gradient(145deg, #6c757d, #5a6268);
+	border: 2px solid rgb(0, 0, 0, 0);
+	color: white;
+}
+
+.btn_warning {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #ffc107, #e0a800);
+	color: black;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_warning_outline {
+	transition: 0.2s;
+	background: transparent;
+	color: #ffc107;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: 2px solid #ffc107;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_warning_outline:hover {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	background: linear-gradient(145deg, #ffc107, #e0a800);
+	border: 2px solid rgb(0, 0, 0, 0);
+	color: white;
+}
+
+.btn_danger {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #dc3545, #c82333);
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_danger_outline {
+	transition: 0.2s;
+	background: transparent;
+	color: #dc3545;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: 2px solid #dc3545;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn_danger_outline:hover {
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	background: linear-gradient(145deg, #dc3545, #c82333);
+	border: 2px solid rgb(0, 0, 0, 0);
+	color: white;
+}
+
+.btn_sm {
+	padding: 4px 8px;
+	font-size: 14px;
+}
+
+.btn_md {
+	padding: 8px 12px;
+	font-size: 16px;
+}
+
+.btn_lg {
+	padding: 12px 16px;
+	font-size: 18px;
+}
+
+.fw_normal {
+	font-weight: normal;
+}
+
+.fw_bold {
+	font-weight: bold;
+}

@@ -2,27 +2,53 @@
 
 import Footer from '@/components/Layout/Footer/Footer'
 import LogoComponent from '@/components/Layout/Navbar/LogoComponent'
-import { signOut } from 'next-auth/react'
+import Badge from '@/components/ui/Badge/Badge'
+import { getUser } from '@/services/user.service'
+import { Order, Status } from '@/types/order.types'
+import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { Alert } from 'react-bootstrap'
 import styles from './Profile.module.css'
 
-interface ProfileProps {
-	orders: any[]
+interface CustomSession {
+	expires: string
+	user: {
+		email: string
+		id: number
+		name: string | null
+		role: string
+		orders_count: number
+	}
 }
 
-export default function Profile({ orders }: ProfileProps) {
+export default function Profile() {
+	const { data: sessionData, status } = useSession()
+	const session =
+		status === 'authenticated'
+			? (sessionData as unknown as CustomSession)
+			: null
+	const userId = session?.user.id
+	const [userData, setUserData] = useState<any>([])
+	const [orders, setOrders] = useState<any>([])
+	const [loading, setLoading] = useState(true)
 	const router = useRouter()
 	const [searchText, setSearchText] = useState('')
-	const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
+	const [selectedStatus, setSelectedStatus] = useState<
+		keyof typeof Status | null
+	>(null)
 	const [showNewOrders, setShowNewOrders] = useState(false)
 
-	const statusColors: Record<string, string> = {
-		PENDING: 'badge bg-warning text-dark',
-		DELIVERED: 'badge bg-success',
-		CANCELED: 'badge bg-danger',
-		CONFIRMED: 'badge bg-primary',
+	const variantMapping: Record<
+		string,
+		'primary' | 'success' | 'danger' | 'warning' | 'secondary'
+	> = {
+		PENDING: 'warning',
+		DELIVERED: 'success',
+		CANCELED: 'danger',
+		CONFIRMED: 'primary',
+		OVERDUE: 'danger',
 	}
 
 	const statusTranslations: Record<string, string> = {
@@ -30,6 +56,7 @@ export default function Profile({ orders }: ProfileProps) {
 		DELIVERED: 'Доставлено',
 		CANCELED: 'Отменено',
 		CONFIRMED: 'Подтверждено',
+		OVERDUE: 'Просрочено',
 	}
 
 	const MarketPlaceBadges: Record<string, string | JSX.Element> = {
@@ -38,25 +65,60 @@ export default function Profile({ orders }: ProfileProps) {
 		Wildberries: 'wb.jpg',
 	}
 
+	useEffect(() => {
+		const fetchUserData = async () => {
+			setLoading(true)
+			const user = await getUser(userId || 0)
+			setUserData(user.data || [])
+			setOrders(user.data.orders.data || [])
+			setLoading(false)
+		}
+		if (status === 'authenticated') {
+			fetchUserData()
+		}
+	}, [status, userId])
+
 	const isNewOrder = (order: any) => {
 		const orderAgeHours =
 			(new Date().getTime() - new Date(order.created_at).getTime()) / 3600000
 		return orderAgeHours <= 12
 	}
 
-	// Фильтрация по статусу
-	const filteredByStatusOrders = selectedStatus
-		? orders.filter(order => order.status === selectedStatus)
-		: orders
+	const formatCurrency = (value: number | undefined): string => {
+		if (value === undefined || value === null) {
+			return ''
+		}
+		return new Intl.NumberFormat('ru-RU', {
+			style: 'currency',
+			currency: 'RUB',
+			minimumFractionDigits: 0,
+		}).format(value)
+	}
 
-	// Фильтрация по флагу "Новые"
-	const filteredByNewOrders = showNewOrders
-		? filteredByStatusOrders.filter(isNewOrder)
-		: filteredByStatusOrders
+	const filteredByStatusOrders = useMemo(
+		() =>
+			selectedStatus
+				? orders.filter(
+						(order: Order) => order.status === Status[selectedStatus]
+				  )
+				: orders,
+		[orders, selectedStatus]
+	)
 
-	// Фильтрация по введенному тексту
-	const finalFilteredOrders = filteredByNewOrders.filter(order =>
-		order.id.toString().includes(searchText)
+	const filteredByNewOrders = useMemo(
+		() =>
+			showNewOrders
+				? filteredByStatusOrders.filter(isNewOrder)
+				: filteredByStatusOrders,
+		[filteredByStatusOrders, showNewOrders]
+	)
+
+	const finalFilteredOrders = useMemo(
+		() =>
+			(filteredByNewOrders || []).filter(
+				(order: Order) => order.id && order.id.toString().includes(searchText)
+			),
+		[filteredByNewOrders, searchText]
 	)
 
 	return (
@@ -67,13 +129,16 @@ export default function Profile({ orders }: ProfileProps) {
 						<LogoComponent width={175} height={175} />
 					</div>
 					<div>
-						<button
-							className='btn btn-primary btn-md me-2'
-							onClick={() => router.push('/control-panel')}
-						>
-							<i className='bi bi-shield-lock me-2'></i>
-							Панель управления
-						</button>
+						{userData.role === 'ADMINISTRATOR' ||
+						userData.role === 'MANAGER' ? (
+							<button
+								className='btn btn-primary btn-md me-2'
+								onClick={() => router.push('/control-panel')}
+							>
+								<i className='bi bi-shield-lock me-2'></i>
+								Панель управления
+							</button>
+						) : null}
 						<button
 							className='btn btn-danger btn-md'
 							onClick={() =>
@@ -107,23 +172,6 @@ export default function Profile({ orders }: ProfileProps) {
 										<i className='bi bi-box-seam-fill me-2'></i> Мои заявки
 									</h5>
 								</div>
-								{/* <div className={`col`}>
-									<div className={`form-check form-switch ms-3`}>
-										<input
-											className='form-check-input'
-											type='checkbox'
-											id='newOrdersSwitch'
-											checked={showNewOrders}
-											onChange={() => setShowNewOrders(!showNewOrders)}
-										/>
-										<label
-											className='form-check-label'
-											htmlFor='newOrdersSwitch'
-										>
-											Показать только новые заявки
-										</label>
-									</div>
-								</div> */}
 								<div className={`col align-self-end ${styles.col_2}`}>
 									<input
 										type='text'
@@ -142,179 +190,198 @@ export default function Profile({ orders }: ProfileProps) {
 									<select
 										className={`form-select text-align-center ${styles.form_control}`}
 										value={selectedStatus || ''}
-										onChange={e => setSelectedStatus(e.target.value || null)}
+										onChange={e => {
+											setSelectedStatus(e.target.value as keyof typeof Status)
+										}}
 									>
 										<option className={styles.option} value=''>
 											Все статусы
 										</option>
-										<option className={styles.option_pending} value='PENDING'>
+										<option
+											className={styles.option_pending}
+											value={Status.PENDING}
+										>
 											В ожидании
 										</option>
 										<option
+											className={styles.option_confirmed}
+											value={Status.CONFIRMED}
+										>
+											Подтверждено
+										</option>
+										<option
 											className={styles.option_delivered}
-											value='DELIVERED'
+											value={Status.DELIVERED}
 										>
 											Доставлено
 										</option>
 										<option className={styles.option_canceled} value='CANCELED'>
 											Отменено
 										</option>
-										<option
-											className={styles.option_confirmed}
-											value='CONFIRMED'
-										>
-											Подтверждено
-										</option>
 									</select>
 								</div>
 							</div>
 						</div>
 
-						<div
-							className={`accordion pt-3 mt-4 ${styles.accordion}`}
-							id='ordersAccordion'
-						>
-							{finalFilteredOrders.length > 0 ? (
-								finalFilteredOrders.map((order, index) => (
-									<div
-										className={`accordion-item ${styles.accordion_item}`}
-										key={order.id}
-									>
-										<h2
-											className={`accordion-header ${styles.accordion_header}`}
-											id={`heading${index}`}
-										>
-											<button
-												className={`accordion-button ${styles.accordion_button} collapsed d-flex justify-content-between align-items-center`}
-												type='button'
-												data-bs-toggle='collapse'
-												data-bs-target={`#collapse${index}`}
-												aria-expanded='false'
-												aria-controls={`collapse${index}`}
-											>
-												<div className='d-flex w-100 justify-content-between align-items-center'>
-													<span>
-														<span
-															className={`${statusColors[order.status]} me-3`}
-														>
-															{statusTranslations[order.status]}
-														</span>
-														Заявка №{order.id}
-													</span>
-													{isNewOrder(order) && (
-														<span className='badge rounded-pill text-bg-danger ms-auto me-3'>
-															Новое
-														</span>
-													)}
-												</div>
-											</button>
-										</h2>
+						{loading ? (
+							<Alert className={`${styles.LoaderContainer} mt-5`}>
+								<div className={styles.loader}></div>
+							</Alert>
+						) : (
+							<div
+								className={`accordion pt-3 mt-4 ${styles.accordion}`}
+								id='ordersAccordion'
+							>
+								{finalFilteredOrders.length > 0 ? (
+									finalFilteredOrders.map((order: any, index: any) => (
 										<div
-											id={`collapse${index}`}
-											className={`accordion-collapse collapse ${styles.accordion_collapse}`}
-											aria-labelledby={`heading${index}`}
-											data-bs-parent='#ordersAccordion'
+											className={`accordion-item ${styles.accordion_item}`}
+											key={order.id}
 										>
-											<div
-												className={`accordion-body ${styles.accordion_body}`}
+											<h2
+												className={`accordion-header ${styles.accordion_header}`}
+												id={`heading${index}`}
 											>
-												<ul className='list-group list-group-flush'>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>ИП:</strong> {order.ip}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Маркетплейс:</strong>{' '}
-														<Image
-															src={`http://localhost:3000/icons/${
-																MarketPlaceBadges[order.marketPlace]
-															}`}
-															className='me-1 ms-2'
-															alt='Marketplace'
-															width={20}
-															height={20}
-														/>
-														{order.marketPlace}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Склад:</strong> {order.warehouse}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Тип доставки:</strong> {order.delivery_type}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Количество:</strong> {order.quantity}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Дополнительные услуги:</strong>{' '}
-														{order.extra_services}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Дата забора:</strong> {order.pickup_date}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Время забора:</strong> {order.pickup_time}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Адрес забора:</strong>{' '}
-														{order.pickup_address}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Контактная информация:</strong>{' '}
-														{order.contact_info}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Комментарий:</strong> {order.comment}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Промо-код:</strong> {order.promo_code}
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Предварительная стоимость:</strong>{' '}
-														{order.order_price} руб.
-													</li>
-													<li
-														className={`list-group-item ${styles.list_group_item}`}
-													>
-														<strong>Дата создания:</strong>{' '}
-														{new Date(order.created_at).toLocaleString()}
-													</li>
-												</ul>
+												<button
+													className={`accordion-button ${styles.accordion_button} collapsed d-flex justify-content-between align-items-center`}
+													type='button'
+													data-bs-toggle='collapse'
+													data-bs-target={`#collapse${index}`}
+													aria-expanded='false'
+													aria-controls={`collapse${index}`}
+												>
+													<div className='d-flex w-100 justify-content-between align-items-center'>
+														<span>
+															<Badge
+																size='md'
+																fw='bold'
+																variant={`${variantMapping[order.status]}`}
+															>
+																{statusTranslations[order.status]}
+															</Badge>{' '}
+															| Заявка №{order.id}
+														</span>
+														{isNewOrder(order) && (
+															<span className='badge rounded-pill text-bg-danger ms-auto me-3'>
+																Новое
+															</span>
+														)}
+													</div>
+												</button>
+											</h2>
+											<div
+												id={`collapse${index}`}
+												className={`accordion-collapse collapse ${styles.accordion_collapse}`}
+												aria-labelledby={`heading${index}`}
+												data-bs-parent='#ordersAccordion'
+											>
+												<div
+													className={`accordion-body ${styles.accordion_body}`}
+												>
+													<ul className='list-group list-group-flush'>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Дата создания:</strong>{' '}
+															{new Date(order.created_at).toLocaleString()}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>ИП:</strong> {order.ip}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Маркетплейс:</strong>{' '}
+															<Image
+																src={`http://localhost:3000/images/icons/marketplaces/${
+																	MarketPlaceBadges[order.marketplace]
+																}`}
+																className='me-1 ms-2'
+																alt='Marketplace'
+																width={20}
+																height={20}
+															/>
+															{order.marketplace}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Склад:</strong> {order.warehouse}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Тип доставки:</strong>{' '}
+															{order.delivery_type}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Количество:</strong> {order.quantity}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Дополнительные услуги:</strong>{' '}
+															{order.extra_services}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Дата забора:</strong> {order.pickup_date}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Время забора:</strong> {order.pickup_time}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Адрес забора:</strong>{' '}
+															{order.pickup_address}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Контактная информация:</strong>{' '}
+															{order.contacts}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Комментарий:</strong> {order.comment}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Промо-код:</strong>{' '}
+															{order.promocode === 'Без промокода' ? (
+																<p> {order.promocode}</p>
+															) : (
+																<span className='badge bg-secondary'>
+																	{order.promocode}
+																</span>
+															)}
+														</li>
+														<li
+															className={`list-group-item ${styles.list_group_item}`}
+														>
+															<strong>Предварительная стоимость: </strong>
+															{formatCurrency(order.price)}
+														</li>
+													</ul>
+												</div>
 											</div>
 										</div>
-									</div>
-								))
-							) : (
-								<h6 className='mt-2 text-center text-muted'>
-									У вас нет заявок
-								</h6>
-							)}
-						</div>
+									))
+								) : (
+									<h6 className='mt-2 text-center pb-3'>У вас нет заявок</h6>
+								)}
+							</div>
+						)}
 					</div>
 				</div>
 			</div>

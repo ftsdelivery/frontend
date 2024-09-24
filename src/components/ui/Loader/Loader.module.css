@@ -1,22 +1,28 @@
 .loader {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	height: 100vh;
-	background: rgb(3, 2, 20);
+	position: fixed; /* Фиксированное позиционирование */
+	top: 0;
+	left: 0;
+	width: 100vw; /* Ширина на весь экран */
+	height: 100vh; /* Высота на весь экран */
+	display: flex; /* Центрируем содержимое */
+	flex-direction: column; /* Строка для размещения логотипа и анимации по вертикали */
+	justify-content: center; /* Центрируем по вертикали */
+	align-items: center; /* Центрируем по горизонтали */
+	background: rgb(3, 2, 20); /* Основной цвет фона */
 	background: linear-gradient(
 		180deg,
 		rgba(3, 2, 20, 1) 15%,
 		rgba(12, 12, 56, 1) 47%,
 		rgba(2, 0, 36, 1) 85%
 	);
+	z-index: 9999; /* Высокий z-index для отображения выше всего остального контента */
 }
 
 .loader-inner {
 	display: flex;
 	justify-content: space-around;
 	width: 100px;
+	margin-top: 20px; /* Отступ сверху, чтобы разместить анимацию ниже логотипа */
 }
 
 .loader-circle {

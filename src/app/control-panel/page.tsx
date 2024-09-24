@@ -1,8 +1,5 @@
-import dynamic from 'next/dynamic'
+import AdminPanel from './AdminPanel'
 
-export default function AdminPagePage() {
-	const AdminApp = dynamic(() => import('@/app/control-panel/AdminPage'), {
-		ssr: false,
-	})
-	return <AdminApp />
+export default function ControlPanelPage() {
+	return <AdminPanel />
 }

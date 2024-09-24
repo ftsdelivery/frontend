@@ -1,9 +1,12 @@
 export interface User {
+	id?: number
+	created_at?: string
+	updated_at?: string
 	name?: string
-	email: string
-	password: string
-	contacts?: string
+	email?: string
+	password?: string
+	admin_password?: string
 	role?: string
-	used_promo_codes?: string[]
+	used_promocodes?: string[] | string
 	orders_count?: number
 }

@@ -1,24 +1,30 @@
-export enum OrderStatus {
-	PENDING = 'PENDING',
-	CONFIRMED = 'CONFIRMED',
-	DELIVERED = 'DELIVERED',
-	CANCELED = 'CANCELED',
+export enum Status {
+	PENDING,
+	CONFIRMED,
+	DELIVERED,
+	CANCELED,
+	OVERDUE,
 }
 
 export interface Order {
-	id?: number
-	user_id?: any
+	id?: number | 0
+	created_at?: string
+	updated_at?: string
+	author_id?: number
+	status?: Status
 	ip?: string
-	marketPlace?: string
+	marketplace?: string
 	warehouse?: string
 	delivery_type?: string
 	quantity?: number
+	box_size?: string
+	box_weight?: number
 	extra_services?: string
 	pickup_date?: string
 	pickup_time?: string
 	pickup_address?: string
-	contact_info?: string
+	contacts?: string
 	comment?: string
-	promo_code?: string
-	order_price?: number
+	promocode?: string
+	price?: number
 }

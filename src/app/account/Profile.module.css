@@ -121,26 +121,66 @@
 	color: hsl(215, 15%, 92%);
 }
 
-.option_pending {
-	background-color: orange;
-	color: hsl(215, 15%, 92%);
-	font-weight: bold;
+.badge_danger {
+	background: linear-gradient(145deg, #dc3545, #c82333);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
 }
 
-.option_confirmed {
-	background-color: blue;
-	color: white;
-	font-weight: bold;
+.badge_success {
+	background: linear-gradient(145deg, #28a745, #218838);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
 }
 
-.option_delivered {
-	background-color: green;
-	color: white;
-	font-weight: bold;
+.badge_warning {
+	background: linear-gradient(145deg, #ffc107, #e0a800);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
 }
 
-.option_canceled {
-	background-color: red;
-	color: white;
-	font-weight: bold;
+.badge_primary {
+	background: linear-gradient(145deg, #007bff, #0056b3);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.badge_overdue {
+	background: linear-gradient(145deg, #800080, #8a2be2);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.loader {
+	width: 60px;
+	height: 60px;
+	border: 8px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 8px solid #3498db;
+	animation: spin 1s linear infinite;
+	margin: auto;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.LoaderContainer {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
 }

@@ -1,35 +1,59 @@
-import pool from '@/lib/db'
+import { createLog } from '@/services/log.service'
+import { createMessage } from '@/services/telegram.service'
+import pool from '@/utils/db'
 import { NextResponse } from 'next/server'
 
 export async function GET(req: any) {
 	try {
-		// Получение параметров из запроса
 		const { searchParams } = new URL(req.url)
-		const ids =
-			searchParams
-				.get('id')
-				?.split(',')
-				.map(id => parseInt(id, 10)) || []
 
-		// Базовый запрос
-		let query = `SELECT * FROM orders`
+		let whereConditions: string[] = []
 		let queryParams: any[] = []
 
-		// Если указан параметр id, добавляем условие WHERE
-		if (ids.length > 0) {
-			query += ` WHERE id = ANY($1::int[])`
-			queryParams.push(ids)
+		const filterableFields = {
+			id: 'number',
+			status: 'enum',
+			author_id: 'number',
+			ip: 'string',
+			marketplace: 'string',
+			warehouse: 'string',
+			delivery_type: 'string',
+			quantity: 'number',
+			box_weight: 'number',
+			box_size: 'string',
+			extra_services: 'string',
+			pickup_date: 'string',
+			pickup_time: 'string',
+			pickup_address: 'string',
+			contacts: 'string',
+			comment: 'string',
+			promocode: 'string',
+			price: 'number',
 		}
 
-		// Обработка сортировки
-		const sortField = searchParams.get('_sort')
-		const sortOrder = searchParams.get('_order') === 'DESC' ? 'DESC' : 'ASC'
-		if (sortField) {
-			query += ` ORDER BY ${sortField} ${sortOrder}`
+		Object.entries(filterableFields).forEach(([field, type]) => {
+			const value = searchParams.get(field)
+			if (value) {
+				if (type === 'string') {
+					whereConditions.push(`${field} ILIKE $${queryParams.length + 1}`)
+					queryParams.push(`%${value}%`)
+				} else if (type === 'number') {
+					whereConditions.push(`${field} = $${queryParams.length + 1}`)
+					queryParams.push(parseFloat(value))
+				} else if (type === 'enum') {
+					whereConditions.push(`${field} = $${queryParams.length + 1}`)
+					queryParams.push(value.toUpperCase())
+				}
+			}
+		})
+
+		let query = 'SELECT * FROM orders'
+
+		if (whereConditions.length > 0) {
+			query += ' WHERE ' + whereConditions.join(' AND ')
 		}
 
-		// Обработка пагинации
-		const limit = parseInt(searchParams.get('_limit') || '0', 10)
+		const limit = parseInt(searchParams.get('_limit') || '10', 10)
 		const page = parseInt(searchParams.get('_page') || '1', 10)
 		if (limit > 0) {
 			const offset = (page - 1) * limit
@@ -39,30 +63,26 @@ export async function GET(req: any) {
 			queryParams.push(limit, offset)
 		}
 
-		// Выполнение запроса к базе данных
 		const { rows } = await pool.query(query, queryParams)
 
-		// Запрос общего количества заказов для правильной пагинации
-		let total = rows.length
-		if (ids.length === 0) {
-			const totalQuery = 'SELECT COUNT(*) FROM orders'
-			const totalResult = await pool.query(totalQuery)
-			total = parseInt(totalResult.rows[0].count, 10)
+		let totalQuery = 'SELECT COUNT(*) FROM orders'
+		if (whereConditions.length > 0) {
+			totalQuery += ' WHERE ' + whereConditions.join(' AND ')
 		}
 
-		// Если заказов нет, возвращаем ошибку
-		if (rows.length === 0) {
-			return NextResponse.json({ error: 'No orders found' }, { status: 404 })
-		}
+		const totalResult = await pool.query(
+			totalQuery,
+			queryParams.slice(0, whereConditions.length)
+		)
+		const total = parseInt(totalResult.rows[0].count, 10)
 
-		// Возвращаем заказы с информацией о пагинации (если применимо)
 		return NextResponse.json({
 			data: rows,
 			total,
 			pageInfo: {
 				hasNextPage:
 					limit > 0 ? (page - 1) * limit + rows.length < total : false,
-				hasPreviousPage: limit > 0 ? page - 1 > 0 : false,
+				hasPreviousPage: limit > 0 ? page > 1 : false,
 			},
 		})
 	} catch (error) {
@@ -78,21 +98,19 @@ export async function POST(request: Request) {
 	try {
 		const body = await request.json()
 
-		// Поля, которые необходимо вставить
 		const requiredFields = [
 			'ip',
-			'marketPlace',
+			'marketplace',
 			'warehouse',
 			'delivery_type',
 			'quantity',
 			'pickup_date',
 			'pickup_time',
 			'pickup_address',
-			'contact_info',
-			'order_price',
+			'contacts',
+			'price',
 		]
 
-		// Проверяем наличие всех обязательных полей
 		for (const field of requiredFields) {
 			if (!body[field]) {
 				return NextResponse.json(
@@ -103,137 +121,68 @@ export async function POST(request: Request) {
 		}
 
 		const insertQuery = `
-            INSERT INTO orders (
-                ip, user_id, "marketPlace", warehouse, delivery_type, quantity,
-                extra_services, pickup_date, pickup_time, pickup_address,
-                contact_info, comment, promo_code, order_price
-            ) VALUES (
-                $1, $2, $3, $4, $5, $6,
-                $7, $8, $9, $10,
-                $11, $12, $13, $14
-            ) RETURNING *;
-        `
+      INSERT INTO orders (
+        author_id, ip, marketplace, warehouse, delivery_type, quantity,
+        box_size, box_weight, extra_services, pickup_date, pickup_time, pickup_address,
+        contacts, comment, promocode, price, created_at, updated_at
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7,
+        $8, $9, $10, $11, $12, $13,
+        $14, $15, $16, now(), now()
+      ) RETURNING *;
+    `
 
 		const insertParams = [
+			body.author_id || 0,
 			body.ip,
-			body.user_id || null, // Поле, которое может быть необязательным
-			body.marketPlace,
+			body.marketplace,
 			body.warehouse,
 			body.delivery_type,
 			body.quantity,
-			body.extra_services || 'Без доп. услуг', // Поля, которые могут быть необязательными
+			body.box_size,
+			body.box_weight,
+			body.extra_services || 'Без доп. услуг',
 			body.pickup_date,
 			body.pickup_time,
 			body.pickup_address,
-			body.contact_info,
+			body.contacts,
 			body.comment || 'Без комментария',
-			body.promo_code || 'Без промокода',
-			body.order_price,
+			body.promocode || 'Без промокода',
+			body.price,
 		]
 
 		const { rows } = await pool.query(insertQuery, insertParams)
 
-		// Возвращаем созданный заказ
+		await createMessage({
+			author_id: body.author_id || 0,
+			ip: body.ip,
+			marketplace: body.marketplace,
+			warehouse: body.warehouse,
+			delivery_type: body.delivery_type,
+			quantity: body.quantity,
+			box_size: body.box_size,
+			box_weight: body.box_weight,
+			extra_services: body.extra_services || 'Без доп. услуг',
+			pickup_date: body.pickup_date,
+			pickup_time: body.pickup_time,
+			pickup_address: body.pickup_address,
+			contacts: body.contacts,
+			comment: body.comment || 'Без комментария',
+			promocode: body.promocode || 'Без промокода>',
+			price: body.price,
+		})
+
+		await createLog({
+			action_type: 'CREATE',
+			target_id: rows[0].id,
+			target_name: 'ORDER',
+			new_value: rows[0],
+		})
+
 		return NextResponse.json(
 			{ message: 'Заявка успешно создана' },
 			{ status: 200 }
 		)
-	} catch (error) {
-		console.error(error)
-		return NextResponse.json(
-			{ error: 'Internal Server Error' },
-			{ status: 500 }
-		)
-	}
-}
-
-export async function PUT(
-	request: Request,
-	{ params }: { params: { id: string } }
-) {
-	try {
-		const id = params.id
-		const body = await request.json()
-
-		const allowedFields = [
-			'ip',
-			'user_id',
-			'marketPlace',
-			'warehouse',
-			'delivery_type',
-			'quantity',
-			'extra_services',
-			'pickup_date',
-			'pickup_time',
-			'pickup_address',
-			'contact_info',
-			'comment',
-			'promo_code',
-			'order_price',
-			'status',
-		]
-
-		const setClauses: string[] = []
-		const updateParams: any[] = []
-		let paramIndex = 1
-
-		for (const field of allowedFields) {
-			if (body[field] !== undefined) {
-				setClauses.push(`${field} = $${paramIndex}`)
-				updateParams.push(body[field])
-				paramIndex++
-			}
-		}
-
-		if (setClauses.length === 0) {
-			return NextResponse.json(
-				{ error: 'No valid fields to update' },
-				{ status: 400 }
-			)
-		}
-
-		const updateQuery = `
-            UPDATE orders
-            SET ${setClauses.join(', ')}
-            WHERE id = $${paramIndex}
-            RETURNING *;
-        `
-
-		updateParams.push(id)
-
-		const { rows } = await pool.query(updateQuery, updateParams)
-
-		if (rows.length === 0) {
-			return NextResponse.json({ error: 'Order not found' }, { status: 404 })
-		}
-
-		return NextResponse.json({ orders: rows[0] })
-	} catch (error) {
-		console.error(error)
-		return NextResponse.json(
-			{ error: 'Internal Server Error' },
-			{ status: 500 }
-		)
-	}
-}
-
-export async function DELETE(
-	request: Request,
-	{ params }: { params: { id: string } }
-) {
-	try {
-		const id = params.id
-
-		const { rows } = await pool.query(
-			'DELETE FROM orders WHERE id = $1 RETURNING *',
-			[id]
-		)
-
-		if (rows.length === 0) {
-			return NextResponse.json({ error: 'Order not found' }, { status: 404 })
-		}
-
-		return NextResponse.json({ status: true, message: 'Order deleted' })
 	} catch (error) {
 		console.error(error)
 		return NextResponse.json(

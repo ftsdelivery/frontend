@@ -1,0 +1,103 @@
+.bg_danger {
+	background: linear-gradient(145deg, #dc3545, #c82333);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.bg_danger_outline {
+	background: none;
+	box-shadow: none;
+	color: #dc3545; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border: 1px solid #dc3545;
+	border-radius: 4px;
+}
+.bg_success {
+	background: linear-gradient(145deg, #28a745, #218838);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.bg_success_outline {
+	background: none;
+	box-shadow: none;
+	color: #28a745; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border: 1px solid #28a745;
+	border-radius: 4px;
+}
+
+.bg_warning {
+	background: linear-gradient(145deg, #ffc107, #e0a800);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.bg_warning_outline {
+	background: none;
+	box-shadow: none;
+	color: #ffc107; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border: 1px solid #ffc107;
+	border-radius: 4px;
+}
+
+.bg_primary {
+	background: linear-gradient(145deg, #007bff, #0056b3);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.bg_primary_outline {
+	background: none;
+	box-shadow: none;
+	color: #007bff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border: 1px solid #007bff;
+	border-radius: 4px;
+}
+
+.bg_overdue {
+	background: linear-gradient(145deg, #800080, #8a2be2);
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+	color: #ffffff; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border-radius: 4px;
+}
+
+.bg_overdue_outline {
+	background: none;
+	box-shadow: none;
+	color: #800080; /* Для обеспечения читаемости текста */
+	padding: 5px 10px;
+	border: 1px solid #800080;
+	border-radius: 4px;
+}
+
+.size_sm {
+	font-size: 10px;
+}
+
+.size_md {
+	font-size: 12px;
+}
+
+.size_lg {
+	font-size: 14px;
+}
+
+.fw_normal {
+	font-weight: normal;
+}
+
+.fw_bold {
+	font-weight: bold;
+}

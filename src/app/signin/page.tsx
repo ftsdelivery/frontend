@@ -39,6 +39,7 @@ export default function SignIn() {
 
 		try {
 			const user = await getUserByEmail(email)
+			console.log(user)
 
 			if (user === null) {
 				toast.error('Пользователь с такой почтой не найден')
@@ -56,6 +57,8 @@ export default function SignIn() {
 				password: user.password,
 				redirect: false,
 			})
+
+			console.log(res)
 
 			if (res && !res.error) {
 				toast.success('Вы успешно вошли в систему')

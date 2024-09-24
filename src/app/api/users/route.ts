@@ -1,9 +1,9 @@
-import pool from '@/lib/db'
+import { createLog } from '@/services/log.service'
+import pool from '@/utils/db'
 import { NextResponse } from 'next/server'
 
-export async function GET(req: any) {
+export async function GET(req: Request) {
 	try {
-		// Получение параметров из запроса
 		const { searchParams } = new URL(req.url)
 		const ids =
 			searchParams
@@ -11,58 +11,58 @@ export async function GET(req: any) {
 				?.split(',')
 				.map(id => parseInt(id, 10)) || []
 
-		// Базовый запрос
-		let query = `SELECT * FROM users`
+		const email = searchParams.get('_email') || ''
+
+		const sortField = searchParams.get('_sort') || 'id'
+		const sortOrder = searchParams.get('_order') === 'DESC' ? 'DESC' : 'ASC'
+		const limit = parseInt(searchParams.get('_limit') || '10', 10)
+		const page = parseInt(searchParams.get('_page') || '1', 10)
+		const offset = (page - 1) * limit
+
+		let query = `
+					SELECT * FROM users
+			`
 		let queryParams: any[] = []
 
-		// Если указан параметр id, добавляем условие WHERE
 		if (ids.length > 0) {
 			query += ` WHERE id = ANY($1::int[])`
 			queryParams.push(ids)
+		} else if (email) {
+			query += ` WHERE email = $1`
+			queryParams.push(email)
 		}
 
-		// Обработка сортировки
-		const sortField = searchParams.get('_sort')
-		const sortUser = searchParams.get('_user') === 'DESC' ? 'DESC' : 'ASC'
-		if (sortField) {
-			query += ` ORDER BY ${sortField} ${sortUser}`
-		}
-
-		// Обработка пагинации
-		const limit = parseInt(searchParams.get('_limit') || '0', 10)
-		const page = parseInt(searchParams.get('_page') || '1', 10)
+		query += ` ORDER BY ${sortField} ${sortOrder}`
 		if (limit > 0) {
-			const offset = (page - 1) * limit
 			query += ` LIMIT $${queryParams.length + 1} OFFSET $${
 				queryParams.length + 2
 			}`
 			queryParams.push(limit, offset)
 		}
 
-		// Выполнение запроса к базе данных
 		const { rows } = await pool.query(query, queryParams)
 
-		// Запрос общего количества заказов для правильной пагинации
 		let total = rows.length
-		if (ids.length === 0) {
+		if (ids.length === 0 && !email) {
 			const totalQuery = 'SELECT COUNT(*) FROM users'
 			const totalResult = await pool.query(totalQuery)
 			total = parseInt(totalResult.rows[0].count, 10)
 		}
 
-		// Если заказов нет, возвращаем ошибку
 		if (rows.length === 0) {
-			return NextResponse.json({ error: 'No users found' }, { status: 404 })
+			return NextResponse.json(
+				{ error: 'Пользователь не найден' },
+				{ status: 404 }
+			)
 		}
 
-		// Возвращаем заказы с информацией о пагинации (если применимо)
 		return NextResponse.json({
 			data: rows,
 			total,
 			pageInfo: {
 				hasNextPage:
 					limit > 0 ? (page - 1) * limit + rows.length < total : false,
-				hasPreviousPage: limit > 0 ? page - 1 > 0 : false,
+				hasPreviousPage: limit > 0 ? page > 1 : false,
 			},
 		})
 	} catch (error) {
@@ -90,8 +90,8 @@ export async function POST(request: Request) {
 		)
 		if (existingUser.rows.length > 0) {
 			return NextResponse.json(
-				{ error: 'User already exists' },
-				{ status: 409 } // Conflict
+				{ error: 'Пользователь с такой почтой уже существует' },
+				{ status: 409 }
 			)
 		}
 
@@ -99,7 +99,12 @@ export async function POST(request: Request) {
 			`INSERT INTO users (email, password)VALUES ($1, $2) RETURNING *`,
 			[email, password]
 		)
-
+		await createLog({
+			action_type: 'CREATE',
+			target_id: rows[0].id,
+			target_name: 'USER',
+			new_value: rows[0],
+		})
 		return NextResponse.json(rows[0], { status: 201 })
 	} catch (error) {
 		console.error(error)

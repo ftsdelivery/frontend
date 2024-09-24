@@ -5,7 +5,7 @@ export default function Loader() {
 	return (
 		<div className={styles.loader}>
 			<Image
-				src={`${process.env.NEXT_PUBLIC_BASE_URL}/logo/logo_v1.svg`}
+				src={`${process.env.NEXT_PUBLIC_BASE_URL}/images/logo/logo_v1.svg`}
 				alt='logo'
 				width={400}
 				height={300}

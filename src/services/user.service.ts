@@ -10,19 +10,19 @@ export const getUser = async (id: number) => {
 
 export const getUserByEmail = async (email: any) => {
 	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/email/${email}`
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users?_email=${email}`
 	)
 
 	if (!response.ok) {
 		throw new Error('Unable to fetch user.')
 	}
-
-	return response.json()
+	const data = await response.json()
+	return data.data[0]
 }
 
 export const getUserIdByEmail = async (email: any) => {
 	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/email/${email}`
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users?_email=${email}`
 	)
 
 	if (!response.ok) {
@@ -35,13 +35,14 @@ export const getUserIdByEmail = async (email: any) => {
 		return user.id
 	}
 
-	return 0 // Если пользователь не найден, возвращаем null
+	return 0
 }
 
 export const getUserOrders = async (id: any) => {
 	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/orders/${id}`
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${id}`
 	)
+	console.log(response)
 	if (!response.ok) throw new Error('Unable to fetch user orders.')
 	return response.json()
 }
@@ -103,4 +104,35 @@ export const deleteUser = async (id: number) => {
 	)
 	if (!response.ok) throw new Error('Unable to delete user.')
 	return response.json()
+}
+
+export const getUsersCountForPeriod = async (startDate: string) => {
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/users?startDate=${startDate}`,
+		{
+			headers: {
+				Authorization: `Bearer ${process.env.API_KEY}`,
+			},
+		}
+	)
+	if (!response.ok) throw new Error('Unable to fetch users count.')
+	const data = await response.json()
+	return data.total
+}
+
+export const getUsersCountByDay = async () => {
+	const today = new Date().toISOString().split('T')[0]
+	return getUsersCountForPeriod(today)
+}
+
+export const getUsersCountByWeek = async () => {
+	const today = new Date()
+	const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()))
+	return getUsersCountForPeriod(startOfWeek.toISOString().split('T')[0])
+}
+
+export const getUsersCountByMonth = async () => {
+	const today = new Date()
+	const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+	return getUsersCountForPeriod(startOfMonth.toISOString().split('T')[0])
 }

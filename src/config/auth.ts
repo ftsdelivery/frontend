@@ -1,35 +1,41 @@
 import { getUsers } from '@/services/user.service'
-import type { AuthOptions, User } from 'next-auth'
-import Credentials from 'next-auth/providers/credentials'
-import GoggleProvider from 'next-auth/providers/google'
+import type { AuthOptions } from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import GoogleProvider from 'next-auth/providers/google'
+
+interface AuthUser {
+	id: string
+	email: string
+	name: string
+}
+export let TEST = {}
 
 export const authConfig: AuthOptions = {
 	providers: [
-		GoggleProvider({
+		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID!,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
 		}),
-		Credentials({
+		CredentialsProvider({
 			credentials: {
-				email: { label: 'email', type: 'email', required: true },
-				password: { label: 'password', type: 'password', required: true },
+				email: { label: 'Email', type: 'email', required: true },
+				password: { label: 'Password', type: 'password', required: true },
 			},
 			async authorize(credentials) {
 				if (!credentials?.email || !credentials.password) return null
 
 				try {
-					// Использование вашего сервиса для получения пользователей
 					const users = await getUsers()
-
-					// Поиск пользователя с соответствующим email
 					const currentUser = users.data.find(
-						(user: User) => user.email === credentials.email
+						(user: AuthUser) => user.email === credentials.email
 					)
 
 					if (currentUser && currentUser.password === credentials.password) {
-						const { password, ...userWithoutPass } = currentUser
-
-						return userWithoutPass as User
+						return {
+							id: currentUser.id,
+							email: currentUser.email,
+							name: currentUser.name,
+						}
 					}
 
 					return null
@@ -40,7 +46,26 @@ export const authConfig: AuthOptions = {
 			},
 		}),
 	],
-	pages: {
-		signIn: 'signin',
+	callbacks: {
+		async jwt({ token, user }) {
+			if (user) {
+				token.id = user.id // Сохраняем id пользователя
+			}
+			return token
+		},
+		async session({ session, token }) {
+			// Явно добавляем id в объект session.user
+			if (token && token.id) {
+				session.user = {
+					...session.user, // Сохраняем стандартные поля
+					id: token.id as string, // Добавляем id
+				}
+			}
+			return session
+		},
+	},
+	secret: process.env.NEXTAUTH_SECRET,
+	session: {
+		strategy: 'jwt',
 	},
 }

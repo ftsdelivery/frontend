@@ -1,0 +1,17 @@
+.content_wrapper {
+	display: flex;
+	height: 100%;
+	transition: margin-left 0.3s; /* Добавьте плавный переход для margin-left */
+	overflow: hidden; /* Не отображать вертикальный скролл в основном контенте */
+}
+
+.content {
+	margin-left: var(--sidebar-width); /* Используем CSS переменную */
+	transition: margin-left 0.3s; /* Добавьте плавный переход для margin-left */
+	height: 100%; /* Убедиться, что содержимое занимает полную высоту */
+	padding-right: var(--content-padding); /* Добавьте отступ справа */
+}
+
+.container {
+	overflow-x: hidden; /* Скрыть все виды прокрутки для основного контейнера */
+}

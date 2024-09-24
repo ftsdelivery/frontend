@@ -1,0 +1,37 @@
+.pageBackground {
+	background: rgb(3, 2, 20);
+	background: linear-gradient(
+		180deg,
+		rgba(3, 2, 20, 1) 15%,
+		rgba(12, 12, 56, 1) 47%,
+		rgba(2, 0, 36, 1) 85%
+	);
+	color: hsl(215, 15%, 92%);
+	width: 100%;
+	min-height: 100vh; /* Задает минимальную высоту страницы */
+	display: flex;
+	align-items: center; /* Центровка по вертикали */
+	justify-content: center; /* Центровка по горизонтали */
+}
+
+.form_control {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	border: 1px solid hsla(210, 100%, 38%, 0.8);
+	color: white;
+}
+
+.form_control::placeholder {
+	color: hsl(215, 15%, 92%);
+}
+
+.form_control:focus {
+	background-color: hsla(210, 100%, 30%, 0.4);
+	border: 1px solid hsla(210, 100%, 38%, 1);
+	color: hsl(215, 15%, 92%);
+}
+
+.option_control {
+	background-color: hsla(210, 100%, 30%, 0.4);
+	color: hsl(215, 15%, 92%);
+	border: 1px solid hsla(210, 100%, 38%, 1);
+}

@@ -1,4 +1,5 @@
 import { Session } from 'next-auth'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import styles from './Navbar.module.css'
 
@@ -11,32 +12,32 @@ const NavLinks = ({ session }: { session: Session | null }) => {
 		>
 			<ul className='navbar-nav'>
 				<li className='nav-item'>
-					<a className={`nav-link ${styles.navLink}`} href='#news'>
+					<Link className={`nav-link ${styles.navLink}`} href='/#news'>
 						Новости
-					</a>
+					</Link>
 				</li>
 				<li className='nav-item'>
-					<a className={`nav-link ${styles.navLink}`} href='#faq'>
+					<Link className={`nav-link ${styles.navLink}`} href='/#faq'>
 						FAQ
-					</a>
+					</Link>
 				</li>
 				<li className='nav-item'>
-					<a className={`nav-link ${styles.navLink}`} href='#feedbacks'>
+					<Link className={`nav-link ${styles.navLink}`} href='/#feedbacks'>
 						Отзывы
-					</a>
+					</Link>
 				</li>
 				<li className='nav-item'>
-					<a className={`nav-link ${styles.navLink}`} href='#about'>
+					<Link className={`nav-link ${styles.navLink}`} href='/#about'>
 						О нас
-					</a>
+					</Link>
 				</li>
 				<li className='nav-item'>
-					<a className={`nav-link ${styles.navLink}`} href='#support'>
+					<Link className={`nav-link ${styles.navLink}`} href='/support'>
 						Поддержка
-					</a>
+					</Link>
 				</li>
 				<li className='nav-item'>
-					<a className={`nav-link ms-3 ${styles.SubmitButon}`} href='#submit'>
+					<a className={`nav-link ${styles.SubmitButon}`} href='/#submit'>
 						Подать заявку
 					</a>
 				</li>

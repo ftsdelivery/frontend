@@ -1,0 +1,25 @@
+.sidebar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: var(--sidebar-width);
+	background: rgb(3, 2, 20);
+	background: linear-gradient(
+		180deg,
+		rgba(3, 2, 20, 1) 15%,
+		rgba(12, 12, 56, 1) 47%,
+		rgba(2, 0, 36, 1) 85%
+	);
+	color: hsl(215, 15%, 92%);
+	padding: 20px 10px;
+	z-index: 100;
+	transition: width 0.3s; /* Плавный переход для ширины */
+	overflow: hidden;
+}
+
+.separator {
+	height: 1px;
+	background-color: hsl(215, 15%, 92%);
+	margin: 10px 0;
+}
