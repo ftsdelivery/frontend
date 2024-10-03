@@ -2,19 +2,38 @@
 
 import Footer from '@/components/Layout/Footer/Footer'
 import Navbar from '@/components/Layout/Navbar/Navbar'
+import { addTicket } from '@/services/ticket.service'
 import { useState } from 'react'
+import { Alert } from 'react-bootstrap'
 import styles from './Support.module.css'
 
 export default function SupportPage() {
-	const [name, setName] = useState('')
+	const [user_id, setUserId] = useState(0)
+	const [user_name, setUserName] = useState('')
 	const [email, setEmail] = useState('')
-	const [subject, setSubject] = useState('')
-	const [message, setMessage] = useState('')
+	const [question_theme, setQuestionTheme] = useState('')
+	const [question, setQuestion] = useState('')
 
 	const handleSubmit = (e: any) => {
 		e.preventDefault()
 		// Логика отправки запроса
-		console.log({ name, email, subject, message })
+		addTicket({
+			user_id,
+			user_name,
+			email,
+			question_theme,
+			question,
+		})
+			.then(() => {
+				alert('Ваш запрос отправлен!')
+				setUserName('')
+				setEmail('')
+				setQuestionTheme('')
+				setQuestion('')
+			})
+			.catch(() => {
+				alert('Произошла ошибка при отправке запроса')
+			})
 	}
 
 	return (
@@ -23,6 +42,16 @@ export default function SupportPage() {
 			<div className={styles.pageBackground}>
 				<div className={`container mt-5 d-flex justify-content-center`}>
 					<div className='col-lg-6 col-12'>
+						<Alert
+							variant='danger'
+							className=' d-flex text-center justify-content-center align-items-center'
+						>
+							<p className='fw-bold'>
+								<i className='bi bi-exclamation-triangle'></i> Модерация
+								приложит все усилия, чтобы ответить вам в ближайшее время.
+								Благодарим за ваше терпение.
+							</p>
+						</Alert>
 						<h2 className='text-center mb-4'>
 							Форма подачи запроса в поддержку
 						</h2>
@@ -35,8 +64,8 @@ export default function SupportPage() {
 									type='text'
 									className={`form-control ${styles.form_control}`}
 									id='name'
-									value={name}
-									onChange={e => setName(e.target.value)}
+									value={user_name}
+									onChange={e => setUserName(e.target.value)}
 									required
 								/>
 							</div>
@@ -62,8 +91,8 @@ export default function SupportPage() {
 								<select
 									id='subject'
 									className={`form-select ${styles.option_control}`}
-									value={subject}
-									onChange={e => setSubject(e.target.value)}
+									value={question_theme}
+									onChange={e => setQuestionTheme(e.target.value)}
 									required
 								>
 									<option value=''>Выберите тему</option>
@@ -81,8 +110,8 @@ export default function SupportPage() {
 									id='message'
 									className={`form-control ${styles.form_control}`}
 									rows={5}
-									value={message}
-									onChange={e => setMessage(e.target.value)}
+									value={question}
+									onChange={e => setQuestion(e.target.value)}
 									required
 								/>
 							</div>

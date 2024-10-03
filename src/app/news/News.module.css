@@ -1,0 +1,135 @@
+/* Добавляем стили для бейджа "Новое" */
+.Badge {
+	position: absolute;
+	top: 10px; /* Отступ сверху */
+	right: 10px; /* Отступ справа */
+	z-index: 1; /* Поверх изображения */
+	background-color: #dc3545; /* Цвет Bootstrap Danger */
+	color: white;
+	padding: 5px 10px;
+	border-radius: 0.25rem;
+	font-size: 0.9rem;
+	font-weight: bold;
+}
+
+/* Фон всего контейнера */
+.BackGround {
+	background: rgb(3, 2, 20);
+	background: linear-gradient(
+		180deg,
+		rgba(3, 2, 20, 1) 15%,
+		rgba(12, 12, 56, 1) 47%,
+		rgba(2, 0, 36, 1) 85%
+	);
+	color: hsl(215, 15%, 92%);
+	padding-top: 50px;
+}
+
+.newsContainer {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.latestNewsBlock {
+	margin-bottom: 3rem;
+}
+
+.latestNews {
+	position: relative;
+	border-color: hsla(210, 100%, 38%, 0.8);
+	background-color: hsla(210, 100%, 30%, 0.612);
+	box-shadow: hsla(200, 10%, 4%, 0.2) 0 -3px 1px inset,
+		hsl(210, 14%, 7%) 0 2px 3px 0;
+	color: hsl(215, 15%, 92%);
+	border-radius: 10px;
+	overflow: hidden;
+	max-width: 80%;
+	margin: 0 auto;
+}
+
+.latestNews img {
+	width: 100%;
+	height: auto;
+	opacity: 0.8;
+}
+
+.latestNews .card-body {
+	padding: 1.5rem;
+	text-align: center;
+}
+
+.newsTitle {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 1rem;
+	color: hsl(215, 25%, 95%);
+}
+
+.newsExcerpt {
+	font-size: 1rem;
+	margin-bottom: 1.25rem;
+	color: hsl(215, 15%, 85%);
+	line-height: 1.4;
+}
+
+.otherNewsGrid {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.newsCard {
+	position: relative; /* Для позиционирования бейджа */
+	transition: transform 0.2s;
+	border-color: hsla(210, 100%, 38%, 0.8);
+	background-color: hsla(210, 100%, 30%, 0.2);
+	box-shadow: hsla(200, 10%, 4%, 0.2) 0 -3px 1px inset,
+		hsl(210, 14%, 7%) 0 2px 3px 0;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.newsCard:hover {
+	transform: scale(1.05);
+}
+
+.newsCard img {
+	height: 180px;
+	object-fit: cover;
+	opacity: 0.85;
+}
+
+.newsCard .card-body {
+	padding: 0;
+}
+
+.card__body {
+	padding: 0;
+}
+
+.newsCard .newsTitle {
+	font-size: 1.25rem;
+	margin-bottom: 0.5rem;
+	color: hsl(215, 25%, 90%);
+}
+
+.newsCard .newsExcerpt {
+	font-size: 0.9rem;
+	color: hsl(215, 15%, 75%);
+}
+
+.readMoreBtn {
+	transition: 0.2s;
+	background: linear-gradient(145deg, #007bff, #0062cc);
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.readMoreBtn:hover {
+	color: white;
+}

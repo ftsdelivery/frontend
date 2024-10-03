@@ -1,5 +1,5 @@
 import AdminPanel from './AdminPanel'
 
-export default function ControlPanelPage() {
+export default async function ControlPanelPage() {
 	return <AdminPanel />
 }

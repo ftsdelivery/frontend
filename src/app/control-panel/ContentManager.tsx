@@ -3,7 +3,7 @@ import Orders from '@/components/AdminPanelPage/Pages/Orders/Orders'
 import Promo from '@/components/AdminPanelPage/Pages/Promo/PromoCodes'
 import Settings from '@/components/AdminPanelPage/Pages/Settings/Settings'
 import Statistic from '@/components/AdminPanelPage/Pages/Statistic/Statistic'
-import Support from '@/components/AdminPanelPage/Pages/Support'
+import Support from '@/components/AdminPanelPage/Pages/Support/Support'
 import Users from '@/components/AdminPanelPage/Pages/Users/Users'
 
 interface ContentManagerProps {

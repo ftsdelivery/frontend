@@ -116,6 +116,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
 							<option value='PROMO'>Промокод</option>
 							<option value='USER'>Пользователь</option>
 							<option value='WAREHOUSE'>Склад</option>
+							<option value='NEWS'>Новость</option>
 						</Form.Control>
 					</Form.Group>
 

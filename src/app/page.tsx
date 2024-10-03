@@ -3,7 +3,7 @@ import Navbar from '@/components/Layout/Navbar/Navbar'
 import AboutSectionComponent from '@/components/MainPage/About/AboutSection'
 import ApplySectionComponent from '@/components/MainPage/Apply/ApplySection'
 import MainPageCarousel from '@/components/MainPage/Carousel/MainPageCarousel'
-import NewsSectionComponent from '@/components/MainPage/News/NewsSection'
+import NewsSlider from '@/components/MainPage/NewsSlider/NewsSlider'
 import SubmitSectionComponent from '@/components/MainPage/OrderForm/OrderForm'
 import SupportSectionComponent from '@/components/MainPage/Support/SupportSection'
 import ThreeBlocksSecionComponent from '@/components/MainPage/ThreeBlocks/ThreeBlockSection'
@@ -14,7 +14,7 @@ export default function Page() {
 			<Navbar />
 			<MainPageCarousel />
 			<ThreeBlocksSecionComponent />
-			<NewsSectionComponent />
+			<NewsSlider />
 			<AboutSectionComponent />
 			<SupportSectionComponent />
 			<ApplySectionComponent />

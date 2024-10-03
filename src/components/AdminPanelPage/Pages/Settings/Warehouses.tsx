@@ -124,6 +124,12 @@ const Warehouses = () => {
 		}
 	}
 
+	const marketplaceNames: { [key: number]: string } = {
+		1: 'Ozon',
+		2: 'Яндекс Маркет',
+		3: 'WildBerries',
+	}
+
 	const handleRemoveWarehouse = async (id: number) => {
 		try {
 			await removeWarehouse(id)
@@ -138,6 +144,63 @@ const Warehouses = () => {
 
 	return (
 		<div>
+			<div className='col'>
+				<div className='col-10'>
+					<h2>Управление складами</h2>
+					<Button
+						variant={`${selectedMarketplace === 1 ? 'primary' : 'secondary'}`}
+						onClick={() => handleMarketplaceChange(1)}
+						className={`m-1 ${styles.btn_warning}`}
+					>
+						<Image
+							src={`${process.env.NEXT_PUBLIC_BASE_URL}/images/icons/marketplaces/ozon.png`}
+							width={20}
+							height={20}
+							alt=''
+							className='me-2'
+						/>
+						Ozon
+					</Button>
+					<Button
+						variant={`${selectedMarketplace === 2 ? 'primary' : 'secondary'}`}
+						onClick={() => handleMarketplaceChange(2)}
+						className={`m-1 ${styles.btn_warning}`}
+					>
+						<Image
+							src={`${process.env.NEXT_PUBLIC_BASE_URL}/images/icons/marketplaces/ym3.jpg`}
+							width={20}
+							height={20}
+							alt=''
+							className='me-2'
+						/>
+						Яндекс Маркет
+					</Button>
+					<Button
+						variant={`${selectedMarketplace === 3 ? 'primary' : 'secondary'}`}
+						onClick={() => handleMarketplaceChange(3)}
+						className={`m-1 ${styles.btn_warning}`}
+					>
+						<Image
+							src={`${process.env.NEXT_PUBLIC_BASE_URL}/images/icons/marketplaces/wb.jpg`}
+							width={20}
+							height={20}
+							alt=''
+							className='me-2'
+						/>
+						WildBerries
+					</Button>
+					<Button
+						variant='success'
+						onClick={handleAddWarehouseClick}
+						title='Добавить склад'
+						size='sm'
+						className={`m-1 ${styles.btn_warning}`}
+					>
+						<i className='bi bi-plus-lg me-2'></i>
+						Добавить склад
+					</Button>
+				</div>
+			</div>
 			<div className={styles.table_container}>
 				<div
 					className={styles.table_container_responsive}
@@ -146,70 +209,6 @@ const Warehouses = () => {
 						overflowY: 'auto',
 					}}
 				>
-					<div className='btn-group mt-3'>
-						<ButtonGroup>
-							<Button
-								variant={`${
-									selectedMarketplace === 1 ? 'primary' : 'secondary'
-								}`}
-								onClick={() => handleMarketplaceChange(1)}
-								className={`me-2 ${styles.btn_warning}`}
-							>
-								<Image
-									src={`${process.env.NEXT_PUBLIC_BASE_URL}/images/icons/marketplaces/ozon.png`}
-									width={20}
-									height={20}
-									alt=''
-									className='me-2'
-								/>
-								Ozon
-							</Button>
-							<Button
-								variant={`${
-									selectedMarketplace === 2 ? 'primary' : 'secondary'
-								}`}
-								onClick={() => handleMarketplaceChange(2)}
-								className={`me-2 ${styles.btn_warning}`}
-							>
-								<Image
-									src={`${process.env.NEXT_PUBLIC_BASE_URL}/images/icons/marketplaces/ym3.jpg`}
-									width={20}
-									height={20}
-									alt=''
-									className='me-2'
-								/>
-								Яндекс Маркет
-							</Button>
-							<Button
-								variant={`${
-									selectedMarketplace === 3 ? 'primary' : 'secondary'
-								}`}
-								onClick={() => handleMarketplaceChange(3)}
-								className={`me-2 ${styles.btn_warning}`}
-							>
-								<Image
-									src={`${process.env.NEXT_PUBLIC_BASE_URL}/images/icons/marketplaces/wb.jpg`}
-									width={20}
-									height={20}
-									alt=''
-									className='me-2'
-								/>
-								WildBerries
-							</Button>
-						</ButtonGroup>
-						<div className='ms-3'>
-							<Button
-								variant='success'
-								onClick={handleAddWarehouseClick}
-								title='Добавить склад'
-								size='sm'
-								className={`me-2 ${styles.btn_warning}`}
-							>
-								<i className='bi bi-plus-lg'></i>
-								Добавить склад
-							</Button>
-						</div>
-					</div>
 					{loading ? (
 						<Alert
 							variant='primary'
@@ -229,41 +228,51 @@ const Warehouses = () => {
 							😞 Склады для выбранного маркетплейса отсутствуют
 						</Alert>
 					) : (
-						<Table striped bordered hover responsive className='mt-3'>
-							<thead>
-								<tr>
-									<th>Название</th>
-									<th>Описание</th>
-									<th>Действия</th>
-								</tr>
-							</thead>
-							<tbody>
-								{warehouses.map(wh => (
-									<tr key={wh.id}>
-										<td>{wh.name}</td>
-										<td>{wh.description}</td>
-										<td>
-											<ButtonGroup>
-												<Button
-													variant='warning'
-													onClick={() => handleEditWarehouseClick(wh)}
-													className={`${styles.btn_warning}`}
-												>
-													<i className='bi bi-pencil-square'></i>
-												</Button>
-												<Button
-													variant='danger'
-													onClick={() => handleRemoveWarehouse(wh.id)}
-													className={`${styles.btn_danger}`}
-												>
-													<i className='bi bi-trash'></i>
-												</Button>
-											</ButtonGroup>
-										</td>
+						<div>
+							<div className='mt-3'>
+								Выбранный склад:{' '}
+								{selectedMarketplace
+									? marketplaceNames[selectedMarketplace]
+									: ''}
+							</div>
+							<Table striped bordered hover responsive className='mt-3'>
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Название</th>
+										<th>Описание</th>
+										<th>Действия</th>
 									</tr>
-								))}
-							</tbody>
-						</Table>
+								</thead>
+								<tbody>
+									{warehouses.map(wh => (
+										<tr key={wh.id}>
+											<td>{wh.id}</td>
+											<td>{wh.name}</td>
+											<td>{wh.description}</td>
+											<td>
+												<ButtonGroup>
+													<Button
+														variant='warning'
+														onClick={() => handleEditWarehouseClick(wh)}
+														className={`${styles.btn_warning}`}
+													>
+														<i className='bi bi-pencil-square'></i>
+													</Button>
+													<Button
+														variant='danger'
+														onClick={() => handleRemoveWarehouse(wh.id)}
+														className={`${styles.btn_danger}`}
+													>
+														<i className='bi bi-trash'></i>
+													</Button>
+												</ButtonGroup>
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</Table>
+						</div>
 					)}
 				</div>
 			</div>

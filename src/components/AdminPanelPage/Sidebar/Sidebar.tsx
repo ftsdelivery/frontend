@@ -2,11 +2,12 @@ import { getPendingOrdersCount } from '@/services/order.service'
 import { getUser } from '@/services/user.service'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './Sidebar.module.css'
 import SidebarLink from './SidebarLink'
 
 const Sidebar = ({ onButtonClick }: any) => {
+	const sidebarRef = useRef<HTMLDivElement>(null)
 	const [isCollapsed, setIsCollapsed] = useState(false)
 	const [activeLink, setActiveLink] = useState(1)
 	const [notificationCount, setNotificationCount] = useState(0)
@@ -14,6 +15,26 @@ const Sidebar = ({ onButtonClick }: any) => {
 	const [loading, setLoading] = useState(true)
 	const router = useRouter()
 	const { data: session } = useSession()
+
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				window.innerWidth <= 768 &&
+				sidebarRef.current &&
+				!sidebarRef.current.contains(event.target as Node)
+			) {
+				setIsCollapsed(true)
+				document.documentElement.style.setProperty('--sidebar-width', '4rem')
+				document.documentElement.style.setProperty('--content-padding', '100px')
+			}
+		}
+
+		document.addEventListener('mousedown', handleClickOutside)
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside)
+		}
+	}, [])
 
 	useEffect(() => {
 		const fetchUser = async () => {
@@ -152,6 +173,7 @@ const Sidebar = ({ onButtonClick }: any) => {
 
 	return (
 		<div
+			ref={sidebarRef}
 			className={`d-flex flex-column p02 ${styles.sidebar}`}
 			style={{
 				width: 'var(--sidebar-width)',
@@ -240,7 +262,7 @@ const Sidebar = ({ onButtonClick }: any) => {
 				</div>
 			</div>
 			<button
-				className={`btn btn-primary ${styles.homeButton} mb-5 mb-md-0`}
+				className={`btn btn-primary ${styles.homeButton}`}
 				onClick={handleHomeButtonClick}
 			>
 				<i className='bi bi-house-door' />{' '}

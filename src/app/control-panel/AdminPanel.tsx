@@ -27,7 +27,6 @@ export default function AdminPanel() {
 
 				if (userId) {
 					const user = await getUser(Number(userId))
-
 					if (
 						user.data.role !== 'ADMINISTRATOR' &&
 						user.data.role !== 'MANAGER'

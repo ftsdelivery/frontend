@@ -102,3 +102,30 @@ model Warehouse {
 
   @@map("warehouses")
 }
+
+model News {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  title      String
+  content    String
+  image      String
+
+  @@map("news")
+}
+
+model Ticket {
+  id             Int      @id @default(autoincrement())
+  user_id        Int
+  user_name      String
+  email          String
+  question       String
+  question_theme String
+  admin_reply    String?
+  admin_id       Int?
+  status         String   @default("PENDING")
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
+
+  @@map("tickets")
+}

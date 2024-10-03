@@ -12,7 +12,7 @@ const NavLinks = ({ session }: { session: Session | null }) => {
 		>
 			<ul className='navbar-nav'>
 				<li className='nav-item'>
-					<Link className={`nav-link ${styles.navLink}`} href='/#news'>
+					<Link className={`nav-link ${styles.navLink}`} href='/news'>
 						Новости
 					</Link>
 				</li>

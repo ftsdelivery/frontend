@@ -5,14 +5,14 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request) {
 	try {
 		const { searchParams } = new URL(request.url)
-		const marketplaceId = searchParams.get('marketplace_id')
-		let query = `SELECT * FROM warehouses`
+		const ticketId = searchParams.get('ticket_id')
+		let query = `SELECT * FROM tickets`
 		let queryParams: any[] = []
 		let conditions: string[] = []
 
-		if (marketplaceId) {
-			conditions.push(`marketplace_id = $${queryParams.length + 1}`)
-			queryParams.push(marketplaceId)
+		if (ticketId) {
+			conditions.push(`ticket_id = $${queryParams.length + 1}`)
+			queryParams.push(ticketId)
 		}
 
 		if (conditions.length > 0) {
@@ -38,17 +38,14 @@ export async function GET(request: Request) {
 		const { rows } = await pool.query(query, queryParams)
 
 		let total = rows.length
-		if (marketplaceId === null) {
-			const totalQuery = 'SELECT COUNT(*) FROM warehouses'
+		if (ticketId === null) {
+			const totalQuery = 'SELECT COUNT(*) FROM tickets'
 			const totalResult = await pool.query(totalQuery)
 			total = parseInt(totalResult.rows[0].count, 10)
 		}
 
 		if (rows.length === 0) {
-			return NextResponse.json(
-				{ error: 'No Warehouses found' },
-				{ status: 404 }
-			)
+			return NextResponse.json({ error: 'No Tickets found' }, { status: 404 })
 		}
 
 		return NextResponse.json({
@@ -73,14 +70,20 @@ export async function POST(request: Request) {
 	try {
 		const body = await request.json()
 
-		const query = `INSERT INTO warehouses (name, description, marketplace_id) VALUES ($1, $2, $3) RETURNING *`
-		const values = [body.name, body.description, body.marketplace_id]
+		const query = `INSERT INTO tickets (user_id, user_name, email, question, question_theme) VALUES ($1, $2, $3, $4, $5) RETURNING *`
+		const values = [
+			body.user_id,
+			body.user_name,
+			body.email,
+			body.question,
+			body.question_theme,
+		]
 		const { rows } = await pool.query(query, values)
 
 		await createLog({
 			action_type: 'CREATE',
 			target_id: rows[0].id,
-			target_name: 'WAREHOUSE',
+			target_name: 'TICKET',
 			new_value: rows[0],
 		})
 

@@ -1,10 +1,9 @@
-// next-auth.d.ts
 import 'next-auth'
 
 declare module 'next-auth' {
 	interface Session {
 		user: {
-			id: string // Добавляем id в сессию
+			id: string
 			email: string
 			name: string
 			image?: string
@@ -12,7 +11,7 @@ declare module 'next-auth' {
 	}
 
 	interface JWT {
-		id: string // Добавляем id в токен
+		id: string
 		email: string
 		name: string
 	}

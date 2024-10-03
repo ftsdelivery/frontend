@@ -1,0 +1,54 @@
+.newsCard {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between; /* Позволяет элементам занимать доступное пространство */
+	border-color: hsla(210, 100%, 38%, 0.8);
+	background-color: hsla(210, 100%, 30%, 0.2);
+	box-shadow: hsla(200, 10%, 4%, 0.2) 0 -3px 1px inset,
+		hsl(210, 14%, 7%) 0 2px 3px 0;
+	color: hsl(215, 15%, 92%);
+}
+
+.cardImage {
+	max-height: 200px;
+	object-fit: cover;
+}
+
+.cardText {
+	flex-grow: 1; /* Позволяет тексту занимать все доступное пространство */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.CardBody {
+	background-color: hsla(210, 100%, 30%, 0.2);
+	box-shadow: hsla(200, 10%, 4%, 0.2) 0 -3px 1px inset,
+		hsl(210, 14%, 7%) 0 2px 3px 0;
+}
+
+.img_placeholder {
+	height: 180px;
+	object-fit: cover;
+	opacity: 0.85;
+}
+
+.ReadMoreButton {
+	transition: 0.2s;
+	background: linear-gradient(
+		145deg,
+		#007bff,
+		#0062cc
+	); /* Градиент для выпуклости */
+	color: white;
+	padding: 8px 12px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Тень для эффекта выпуклости */
+	text-decoration: none;
+	margin-top: 10px; /* Отступ сверху для кнопки */
+}

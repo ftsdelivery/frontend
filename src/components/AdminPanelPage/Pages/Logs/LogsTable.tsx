@@ -29,6 +29,7 @@ const targetColors: Record<string, string> = {
 	PROMO: `badge ${styles.badge_gray}`,
 	USER: `badge ${styles.badge_gray}`,
 	WAREHOUSE: `badge ${styles.badge_gray}`,
+	NEWS: `badge ${styles.badge_gray}`,
 }
 
 const targetIcons: Record<string, string> = {
@@ -36,6 +37,7 @@ const targetIcons: Record<string, string> = {
 	PROMO: 'bi bi-tags', // Иконка для промокода
 	USER: 'bi bi-person', // Иконка для пользователя
 	WAREHOUSE: 'bi bi-house', // Иконка для склада
+	NEWS: 'bi bi-newspaper', // Иконка для новости
 }
 
 const targetTranslations: Record<string, string> = {
@@ -43,6 +45,7 @@ const targetTranslations: Record<string, string> = {
 	PROMO: 'Промокод',
 	USER: 'Пользователь',
 	WAREHOUSE: 'Склад',
+	NEWS: 'Новость',
 }
 
 const LogsTable: React.FC<UsersTableProps> = ({ logs }) => {

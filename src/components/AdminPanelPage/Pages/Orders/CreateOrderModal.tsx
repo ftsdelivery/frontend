@@ -214,6 +214,36 @@ const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
 								onChange={handleCheckboxChange}
 							/>
 						</Form.Group>
+						<Form.Group controlId='formbox_weight'>
+							<Form.Label>Вес короба</Form.Label>
+							<Form.Control
+								type='text'
+								name='box_weight'
+								value={newOrder.box_weight || ''}
+								onChange={handleChange}
+								required
+							/>
+						</Form.Group>
+						<Form.Group controlId='formbox_weight'>
+							<Form.Label>Размер короба</Form.Label>
+							<Form.Control
+								as='select'
+								name='box_size'
+								value={newOrder.box_size || ''}
+								onChange={handleChange}
+								required
+							>
+								<option value='Маленький (30x20x20)'>
+									Маленький (30x20x20)
+								</option>
+								<option value='Стандартный (60x40x40)'>
+									Стандартный (60x40x40)
+								</option>
+								<option value='Максимальный (120x80x40)'>
+									Максимальный (120x80x40)
+								</option>
+							</Form.Control>
+						</Form.Group>
 						<Form.Group controlId='formpickup_date'>
 							<Form.Label>Дата забора</Form.Label>
 							<Form.Control
@@ -248,7 +278,7 @@ const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
 							<Form.Label>Контактная информация</Form.Label>
 							<Form.Control
 								type='text'
-								name='contact_info'
+								name='contacts'
 								value={newOrder.contacts || ''}
 								onChange={handleChange}
 								required
@@ -267,7 +297,7 @@ const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
 							<Form.Label>Промокод</Form.Label>
 							<Form.Control
 								type='text'
-								name='promo_code'
+								name='promocode'
 								value={newOrder.promocode || ''}
 								onChange={handleChange}
 							/>
@@ -276,7 +306,7 @@ const CreateOrderModal: React.FC<CreateOrderModalProps> = ({
 							<Form.Label>Предварительная стоимость</Form.Label>
 							<Form.Control
 								type='number'
-								name='order_price'
+								name='price'
 								value={newOrder.price || ''}
 								onChange={handleChange}
 							/>

@@ -75,7 +75,7 @@ const OrderModalLogs: React.FC<OrderModalProps> = ({ show, onHide, order }) => {
 				{loading ? (
 					<div className='d-flex justify-content-center'>
 						<Spinner animation='border' role='status'>
-							<span className='sr-only'>Загрузка...</span>
+							<span className='sr-only'></span>
 						</Spinner>
 					</div>
 				) : error ? (

@@ -372,6 +372,15 @@ export default function Profile() {
 															<strong>Предварительная стоимость: </strong>
 															{formatCurrency(order.price)}
 														</li>
+														<li className='mt-3 d-flex align-items-center justify-content-center'>
+															<button className='btn btn-warning me-2'>
+																<i className='bi bi-pencil-square'></i>{' '}
+																Редактировать
+															</button>
+															<button className='btn btn-danger ms-2'>
+																<i className='bi bi-trash'></i> Удалить
+															</button>
+														</li>
 													</ul>
 												</div>
 											</div>
