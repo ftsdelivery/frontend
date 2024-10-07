@@ -5,8 +5,9 @@ import {
 	removeTicket,
 	updateTicket,
 } from '@/services/ticket.service'
-import { Ticket } from '@/types/ticket.types'
-import { getSession } from 'next-auth/react' // Импортируем getSession
+import { Status, Ticket } from '@/types/ticket.types'
+import { playSuccessSound } from '@/utils/SoundEffects'
+import { getSession } from 'next-auth/react'
 import { useCallback, useEffect, useState } from 'react'
 import { Alert, Button, ButtonGroup, Form, Modal, Table } from 'react-bootstrap'
 import { toast } from 'sonner'
@@ -19,8 +20,11 @@ const Support = () => {
 	const [showModal, setShowModal] = useState(false)
 	const [currentTicket, setCurrentTicket] = useState<Ticket | null>(null)
 	const [adminReply, setAdminReply] = useState<string>('')
+	const [showAnswered, setShowAnswered] = useState(true)
+	const [filterTheme, setFilterTheme] = useState<string | null>(null)
+	const [showFilterModal, setShowFilterModal] = useState(false)
+	const [selectedTheme, setSelectedTheme] = useState<string | null>(null)
 
-	// Функция для получения тикетов
 	const fetchTickets = useCallback(async () => {
 		setLoading(true)
 		try {
@@ -43,7 +47,6 @@ const Support = () => {
 		fetchTickets()
 	}, [fetchTickets])
 
-	// Функция для обновления статуса тикета и добавления ответа
 	const handleUpdateReply = async (ticket: Ticket) => {
 		if (adminReply) {
 			try {
@@ -54,21 +57,20 @@ const Support = () => {
 					...ticket,
 					admin_reply: adminReply,
 					admin_id: adminId,
-					status: 'ANSWERED', // Устанавливаем статус как 'ANSWERED'
+					status: 'ANSWERED',
 				}
 
 				await updateTicket(updatedTicket as unknown as Ticket)
 
-				// Отправка email пользователю
 				await fetch('/api/tickets/email', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
 					},
 					body: JSON.stringify({
-						userEmail: ticket.email, // Email пользователя
-						userName: ticket.user_name, // Имя пользователя
-						adminReply, // Ответ администратора
+						userEmail: ticket.email,
+						userName: ticket.user_name,
+						adminReply,
 					}),
 				})
 
@@ -77,7 +79,8 @@ const Support = () => {
 						t.id === ticket.id ? (updatedTicket as unknown as Ticket) : t
 					)
 				)
-				toast.success('Ответ отправлен')
+				toast.success('Ответ успешно отправлен')
+				playSuccessSound()
 				handleModalClose()
 			} catch (error) {
 				toast.error('Ошибка при отправке ответа')
@@ -85,7 +88,6 @@ const Support = () => {
 		}
 	}
 
-	// Функция для открытия модального окна
 	const handleModalOpen = (ticket: Ticket) => {
 		setCurrentTicket(ticket)
 		setAdminReply('')
@@ -98,12 +100,17 @@ const Support = () => {
 		setAdminReply('')
 	}
 
-	// Функция для удаления тикета
+	const handleReset = () => {
+		setFilterTheme(null)
+		setShowFilterModal(false)
+	}
+
 	const handleRemoveTicket = async (id: number) => {
 		try {
 			await removeTicket(id)
 			setTickets(tickets.filter(ticket => ticket.id !== id))
 			toast.success('Тикет успешно удален')
+			playSuccessSound()
 		} catch (error) {
 			toast.error('Ошибка при удалении тикета')
 		}
@@ -119,9 +126,67 @@ const Support = () => {
 		ANSWERED: { label: 'Отвечен', icon: 'bi bi-check-circle me-2' },
 	}
 
+	const ticketThemes = [
+		'Общие вопросы',
+		'Техническая поддержка',
+		'Оплата',
+		'Возврат',
+		'Другое',
+	]
+
+	const handleApplyFilter = () => {
+		setFilterTheme(selectedTheme) // Применяем фильтр по выбранной теме
+		setShowFilterModal(false)
+	}
+
+	const sortedTickets = tickets
+		.filter(ticket => showAnswered || ticket.status !== Status.ANSWERED) // Фильтрация отвеченных тикетов
+		.filter(ticket => !filterTheme || ticket.question_theme === filterTheme) // Фильтрация по теме
+		.sort((a, b) => {
+			if (a.status === Status.PENDING && b.status !== Status.PENDING) return -1
+			if (a.status !== Status.PENDING && b.status === Status.PENDING) return 1
+			if (a.status === undefined && b.status !== undefined) return 1
+			if (a.status !== undefined && b.status === undefined) return -1
+			return 0 // Если оба статуса равны
+		})
+
 	return (
 		<div>
 			<h2>Система поддержки</h2>
+			<ButtonGroup className='mb-3'>
+				<Button
+					variant='primary'
+					title='Обновить'
+					onClick={fetchTickets}
+					size='sm'
+					className={`me-2 ${styles.btn_sucess}`}
+				>
+					<i className='bi bi-arrow-clockwise'></i>
+				</Button>
+				<Button
+					variant='primary'
+					title='Фильтр'
+					onClick={() => setShowFilterModal(true)}
+					size='sm'
+					className={`me-2 ${styles.btn_sucess}`}
+				>
+					<i className='bi bi-funnel'></i>
+				</Button>
+				<Button
+					variant='secondary'
+					onClick={() => setShowAnswered(!showAnswered)}
+				>
+					{showAnswered ? (
+						<>
+							<i className='bi bi-eye-slash'></i> Не показывать отвеченные
+						</>
+					) : (
+						<>
+							<i className='bi bi-eye'></i> Показать отвеченные
+						</>
+					)}
+				</Button>
+			</ButtonGroup>
 
 			{loading ? (
 				<Alert
@@ -158,7 +223,7 @@ const Support = () => {
 								</tr>
 							</thead>
 							<tbody>
-								{tickets.map((ticket: any) => (
+								{sortedTickets.map((ticket: any) => (
 									<tr key={ticket.id}>
 										<td>{ticket.id}</td>
 										<td>
@@ -182,11 +247,12 @@ const Support = () => {
 													disabled={ticket.status === 'ANSWERED'}
 													onClick={() => handleModalOpen(ticket)}
 												>
-													Ответить
+													<i className='bi bi-chat-dots'></i>
+													{''} Ответить
 												</Button>
 												<Button
 													variant='danger'
-													onClick={() => handleRemoveTicket(ticket.id!)} // Используем ! для указания, что id не null
+													onClick={() => handleRemoveTicket(ticket.id!)}
 												>
 													<i className='bi bi-trash'></i>
 												</Button>
@@ -250,6 +316,46 @@ const Support = () => {
 						onClick={() => currentTicket && handleUpdateReply(currentTicket)}
 					>
 						Отправить ответ
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			{/* Модальное окно для фильтрации тикетов */}
+			<Modal show={showFilterModal} onHide={() => setShowFilterModal(false)}>
+				<Modal.Header closeButton>
+					<Modal.Title>Фильтр по темам</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					<Form.Group controlId='filterTheme'>
+						<Form.Label>Выберите тему</Form.Label>
+						<Form.Control
+							as='select'
+							value={selectedTheme || ''}
+							onChange={e => setSelectedTheme(e.target.value || null)} // Обновляем локальную переменную, а не состояние
+						>
+							<option value=''>Все темы</option>
+							{ticketThemes.map(theme => (
+								<option key={theme} value={theme}>
+									{theme}
+								</option>
+							))}
+						</Form.Control>
+					</Form.Group>
+				</Modal.Body>
+				<Modal.Footer>
+					<Button
+						variant='outline-danger'
+						className={`${styles.btn_danger_outline}`}
+						size='sm'
+						onClick={handleReset}
+					>
+						Сбросить
+					</Button>
+					<Button variant='secondary' onClick={() => setShowFilterModal(false)}>
+						Закрыть
+					</Button>
+					<Button variant='primary' onClick={handleApplyFilter}>
+						Применить
 					</Button>
 				</Modal.Footer>
 			</Modal>

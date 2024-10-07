@@ -1,4 +1,5 @@
 import { getPendingOrdersCount } from '@/services/order.service'
+import { getTicketsCount } from '@/services/ticket.service'
 import { getUser } from '@/services/user.service'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -11,6 +12,7 @@ const Sidebar = ({ onButtonClick }: any) => {
 	const [isCollapsed, setIsCollapsed] = useState(false)
 	const [activeLink, setActiveLink] = useState(1)
 	const [notificationCount, setNotificationCount] = useState(0)
+	const [notificationCountTickets, setNotificationCountTickets] = useState(0)
 	const [role, setRole] = useState('')
 	const [loading, setLoading] = useState(true)
 	const router = useRouter()
@@ -83,6 +85,18 @@ const Sidebar = ({ onButtonClick }: any) => {
 		}
 
 		fetchPendingOrdersCount()
+	}, [])
+
+	useEffect(() => {
+		const fetchTicketsCount = async () => {
+			try {
+				const count = await getTicketsCount()
+				setNotificationCountTickets(count)
+			} catch (error) {
+				console.error('Error fetching tickets count:', error)
+			}
+		}
+		fetchTicketsCount()
 	}, [])
 
 	const toggleSidebar = () => {
@@ -250,6 +264,9 @@ const Sidebar = ({ onButtonClick }: any) => {
 										onClick={() => handleLinkClick(link.content, link.index)}
 										notificationCount={
 											link.index === 2 ? notificationCount : undefined
+										}
+										notificationCountTickets={
+											link.index === 3 ? notificationCountTickets : undefined
 										}
 									/>
 									{link.separator && (

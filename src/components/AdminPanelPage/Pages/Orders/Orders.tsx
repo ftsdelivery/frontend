@@ -6,6 +6,7 @@ import {
 } from '@/services/order.service'
 import { Order } from '@/types/order.types'
 import { User } from '@/types/user.types'
+import { playErrorSound, playSuccessSound } from '@/utils/SoundEffects'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import { useCallback, useEffect, useState } from 'react'
@@ -216,10 +217,12 @@ const Orders = () => {
 		try {
 			await updateOrder(id, order)
 			toast.success('Заявка успешно изменена')
+			playSuccessSound()
 			fetchOrdersData()
 		} catch (error) {
 			console.error('Ошибка при изменении заявки:', error)
 			toast.error('Ошибка при изменении заявки')
+			playErrorSound()
 		} finally {
 			setShowEditModal(false)
 			setSelectedOrder(null)

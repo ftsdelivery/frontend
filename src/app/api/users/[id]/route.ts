@@ -12,7 +12,7 @@ export async function GET(
 		const query = `
       SELECT 
         u.id AS user_id, u.created_at AS user_created_at, u.updated_at AS user_updated_at,
-        u.email, u.name, u.role, u.password, u.admin_password, u.used_promocodes, u.orders_count,
+        u.email, u.name, u.role, u.password, u.admin_password, u.used_promocodes, u.orders_count, u.reset_token,
         o.id AS order_id, o.status AS order_status, o.created_at AS order_created_at,
         o.updated_at AS order_updated_at, o.ip, o.marketplace, o.warehouse, o.delivery_type,
         o.quantity, o.extra_services, o.pickup_date, o.pickup_time, o.pickup_address,
@@ -47,6 +47,7 @@ export async function GET(
 					admin_password: row.admin_password,
 					used_promocodes: row.used_promocodes,
 					orders_count: row.orders_count,
+					reset_token: row.reset_token,
 					orders: {
 						total: 0,
 						data: [],
@@ -135,6 +136,7 @@ export async function PUT(
 			'used_promocodes',
 			'orders_count',
 			'admin_password',
+			'reset_token',
 		]
 
 		// 1. Получаем старые данные ДО обновления

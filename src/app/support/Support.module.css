@@ -35,3 +35,11 @@
 	color: hsl(215, 15%, 92%);
 	border: 1px solid hsla(210, 100%, 38%, 1);
 }
+
+.orange_icon {
+	color: orange; /* Цвет иконки */
+	font-size: 1.5rem; /* Размер иконки */
+	text-shadow: 0 0 5px rgba(255, 165, 0, 0.8), 0 0 10px rgba(255, 165, 0, 0.7),
+		0 0 15px rgba(255, 165, 0, 0.6); /* Эффект свечения */
+	transition: text-shadow 0.3s; /* Плавный переход для эффекта при наведении */
+}

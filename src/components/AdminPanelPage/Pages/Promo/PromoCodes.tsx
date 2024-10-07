@@ -5,6 +5,7 @@ import {
 	updatePromoCode,
 } from '@/services/promocodes.service'
 import { PromoCode } from '@/types/promocode.types'
+import { playSuccessSound } from '@/utils/SoundEffects'
 import { getSession } from 'next-auth/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Alert, Button, ButtonGroup, Form, Table } from 'react-bootstrap'
@@ -59,6 +60,7 @@ const PromoCodes: React.FC = () => {
 			if (promoCode.id) {
 				await updatePromoCode(promoCode.id, promoCode)
 				toast.success('Промокод успешно обновлен')
+				playSuccessSound()
 			} else {
 				const session = await getSession()
 				const UserId = session?.user.id
@@ -70,6 +72,7 @@ const PromoCodes: React.FC = () => {
 
 				await createPromoCode(promoCode)
 				toast.success('Промокод успешно добавлен')
+				playSuccessSound()
 			}
 			fetchPromoCodesData()
 		} catch (error) {
@@ -102,6 +105,7 @@ const PromoCodes: React.FC = () => {
 			try {
 				await deletePromoCode(selectedPromoCode.id!)
 				toast.success('Промокод успешно удален')
+				playSuccessSound()
 				fetchPromoCodesData()
 			} catch (error) {
 				console.error('Ошибка при удалении промокода:', error)

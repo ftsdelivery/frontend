@@ -1,6 +1,10 @@
 'use client'
 
-import { createUser, getUserByEmail } from '@/services/user.service'
+import {
+	createUser,
+	getUserByEmail,
+	sendResetPasswordEmail,
+} from '@/services/user.service'
 import bcrypt from 'bcryptjs' // Импортируем bcrypt
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -12,7 +16,9 @@ import styles from './page.module.css'
 
 export default function SignIn() {
 	const [isRegistering, setIsRegistering] = useState(false)
+	const [isResettingPassword, setIsResettingPassword] = useState(false) // Состояние для восстановления пароля
 	const [password, setPassword] = useState('')
+	const [email, setEmail] = useState('') // Состояние для хранения email
 	const [passwordStrength, setPasswordStrength] = useState(0)
 	const [showPassword, setShowPassword] = useState(false)
 	const [isLoginSuccessful, setIsLoginSuccessful] = useState(false)
@@ -20,6 +26,10 @@ export default function SignIn() {
 
 	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPassword(e.target.value)
+	}
+
+	const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setEmail(e.target.value)
 	}
 
 	const handlePasswordStrengthChange = (score: number) => {
@@ -118,24 +128,49 @@ export default function SignIn() {
 		}
 	}
 
+	const handleResetPasswordSubmit = async (
+		event: React.FormEvent<HTMLFormElement>
+	) => {
+		event.preventDefault()
+
+		sendResetPasswordEmail(email)
+		// Здесь должен быть ваш код для отправки запроса на восстановление пароля
+		// Например, вызов функции sendResetPasswordEmail(email) или аналогичной
+		toast.success('Письмо для восстановления пароля отправлено на вашу почту')
+		setIsResettingPassword(false) // Возвращаемся к форме входа
+	}
+
 	const toggleFormType = () => {
-		setIsRegistering(prevState => !prevState)
+		if (isResettingPassword) {
+			setIsResettingPassword(false) // Вернуться к входу из состояния восстановления пароля
+		} else {
+			setIsRegistering(prevState => !prevState) // Переключиться между входом и регистрацией
+		}
 		setPassword('')
 		setPasswordStrength(0)
 		setShowPassword(false)
+		setEmail('') // Очистить поле email при переключении
 	}
 
 	return (
 		<div className={styles.Main}>
 			<div className={`container w-50 pt-5 ${styles.Container}`}>
 				<h1 className={`text-center ${styles.text_center}`}>
-					{isRegistering ? 'Регистрация' : 'Вход'}
+					{isRegistering
+						? 'Регистрация'
+						: isResettingPassword
+						? 'Восстановление пароля'
+						: 'Вход'}
 				</h1>
 				<div className='row justify-content-center'>
 					<div className='col-md-6'>
 						<form
 							onSubmit={
-								isRegistering ? handleRegisterSubmit : handleLoginSubmit
+								isResettingPassword
+									? handleResetPasswordSubmit
+									: isRegistering
+									? handleRegisterSubmit
+									: handleLoginSubmit
 							}
 						>
 							<div className='mb-3 pt-5'>
@@ -148,79 +183,85 @@ export default function SignIn() {
 									className={`form-control ${styles.form_control}`}
 									placeholder='Введите вашу почту'
 									required
+									value={email}
+									onChange={handleEmailChange} // Обработчик для email
 								/>
 							</div>
-							<div className='mb-3'>
-								<label className={`form-label ${styles.form_label}`}>
-									Пароль
-								</label>
-								<div className='input-group'>
-									<input
-										type={showPassword ? 'text' : 'password'}
-										name='password'
-										className={`form-control ${styles.form_control}`}
-										placeholder='Введите ваш пароль'
-										value={password}
-										onChange={handlePasswordChange}
-										required
-									/>
-									<span
-										className={`input-group-text ${styles.input_group_text}`}
-										onClick={toggleShowPassword}
-										style={{ cursor: 'pointer' }}
-									>
-										<i
-											className={`bi ${
-												showPassword ? 'bi-eye-slash' : 'bi-eye'
-											}`}
-										></i>
-									</span>
-								</div>
-								{isRegistering && (
-									<PasswordStrengthBar
-										style={{ marginTop: '8px' }}
-										scoreWordStyle={{ fontSize: '14px' }}
-										password={password}
-										onChangeScore={handlePasswordStrengthChange}
-										minLength={8}
-										shortScoreWord='Слишком короткий пароль'
-										scoreWords={[
-											'Очень слабый пароль',
-											'Слабый пароль',
-											'Нормальный пароль',
-											'Сильный пароль',
-											'Очень сильный пароль',
-										]}
-									/>
-								)}
-							</div>
-
-							{isRegistering && (
-								<div className='mb-3'>
-									<label className={`form-label ${styles.form_label}`}>
-										Подтвердите пароль
-									</label>
-									<div className='input-group'>
-										<input
-											type={showPassword ? 'text' : 'password'}
-											name='confirmPassword'
-											className={`form-control ${styles.form_control}`}
-											placeholder='Повторите ваш пароль'
-											required
-										/>
-										<span
-											className={`input-group-text ${styles.input_group_text}`}
-											onClick={toggleShowPassword}
-											style={{ cursor: 'pointer' }}
-										>
-											<i
-												className={`bi ${
-													showPassword ? 'bi-eye-slash' : 'bi-eye'
-												}`}
-											></i>
-										</span>
+							{!isResettingPassword && (
+								<>
+									<div className='mb-3'>
+										<label className={`form-label ${styles.form_label}`}>
+											Пароль
+										</label>
+										<div className='input-group'>
+											<input
+												type={showPassword ? 'text' : 'password'}
+												name='password'
+												className={`form-control ${styles.form_control}`}
+												placeholder='Введите ваш пароль'
+												value={password}
+												onChange={handlePasswordChange}
+												required
+											/>
+											<span
+												className={`input-group-text ${styles.input_group_text}`}
+												onClick={toggleShowPassword}
+												style={{ cursor: 'pointer' }}
+											>
+												<i
+													className={`bi ${
+														showPassword ? 'bi-eye-slash' : 'bi-eye'
+													}`}
+												></i>
+											</span>
+										</div>
+										{isRegistering && (
+											<PasswordStrengthBar
+												style={{ marginTop: '8px' }}
+												scoreWordStyle={{ fontSize: '14px' }}
+												password={password}
+												onChangeScore={handlePasswordStrengthChange}
+												minLength={8}
+												shortScoreWord='Слишком короткий пароль'
+												scoreWords={[
+													'Очень слабый пароль',
+													'Слабый пароль',
+													'Нормальный пароль',
+													'Сильный пароль',
+													'Очень сильный пароль',
+												]}
+											/>
+										)}
 									</div>
-								</div>
+
+									{isRegistering && (
+										<div className='mb-3'>
+											<label className={`form-label ${styles.form_label}`}>
+												Подтвердите пароль
+											</label>
+											<div className='input-group'>
+												<input
+													type={showPassword ? 'text' : 'password'}
+													name='confirmPassword'
+													className={`form-control ${styles.form_control}`}
+													placeholder='Повторите ваш пароль'
+													required
+												/>
+												<span
+													className={`input-group-text ${styles.input_group_text}`}
+													onClick={toggleShowPassword}
+													style={{ cursor: 'pointer' }}
+												>
+													<i
+														className={`bi ${
+															showPassword ? 'bi-eye-slash' : 'bi-eye'
+														}`}
+													></i>
+												</span>
+											</div>
+										</div>
+									)}
+								</>
 							)}
 
 							<div className='d-grid'>
@@ -230,7 +271,11 @@ export default function SignIn() {
 									disabled={isRegistering && passwordStrength < 3}
 									{...(isLoginSuccessful && { 'data-bs-dismiss': 'modal' })}
 								>
-									{isRegistering ? 'Зарегистрироваться' : 'Войти'}
+									{isRegistering
+										? 'Зарегистрироваться'
+										: isResettingPassword
+										? 'Отправить'
+										: 'Войти'}
 								</button>
 							</div>
 						</form>
@@ -242,8 +287,19 @@ export default function SignIn() {
 							>
 								{isRegistering
 									? 'Уже есть аккаунт? Войти'
+									: isResettingPassword
+									? 'Вернуться к входу'
 									: 'Нет аккаунта? Зарегистрироваться'}
 							</button>
+							{!isRegistering && !isResettingPassword && (
+								<button
+									type='button'
+									className={`btn btn-link mt-4 ${styles.toggle_button}`}
+									onClick={() => setIsResettingPassword(true)} // Устанавливаем состояние для восстановления пароля
+								>
+									Забыли пароль?
+								</button>
+							)}
 							<button
 								type='button'
 								className={`btn btn-link mt-4 d-flex align-items-center ${styles.toggle_button}`}
@@ -253,20 +309,6 @@ export default function SignIn() {
 								На Главную
 							</button>
 						</div>
-						{/* <div className='d-flex justify-content-center flex-direction-column'>
-							<button className={styles.Button}>
-								<i className='bi bi-google me-2'></i>Войти через Google
-							</button>
-							<button className={styles.Button}>
-								<i className='bi bi-vk'></i>Войти через ВКонтакте
-							</button>
-							<button className={styles.Button}>
-								<i className='bi bi-yandex'> </i> Войти через Yandex
-							</button>
-							<button className={styles.Button}>
-								<i className='bi bi-facebook me-2'></i>Войти через Facebook
-							</button>
-						</div> */}
 					</div>
 				</div>
 				<ToastContainer autoClose={1500} pauseOnFocusLoss={false} limit={3} />

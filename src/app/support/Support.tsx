@@ -47,9 +47,11 @@ export default function SupportPage() {
 							className=' d-flex text-center justify-content-center align-items-center'
 						>
 							<p className='fw-bold'>
-								<i className='bi bi-exclamation-triangle'></i> Модерация
-								приложит все усилия, чтобы ответить вам в ближайшее время.
-								Благодарим за ваше терпение.
+								<i
+									className={`bi bi-exclamation-triangle ${styles.orange_icon}`}
+								></i>{' '}
+								Модерация приложит все усилия, чтобы ответить вам в ближайшее
+								время. Благодарим за ваше терпение.
 							</p>
 						</Alert>
 						<h2 className='text-center mb-4'>
@@ -96,9 +98,13 @@ export default function SupportPage() {
 									required
 								>
 									<option value=''>Выберите тему</option>
-									<option value='general'>Общие вопросы</option>
-									<option value='technical'>Техническая поддержка</option>
-									<option value='billing'>Вопросы по оплате</option>
+									<option value='Общие вопросы'>Общие вопросы</option>
+									<option value='Техническая поддержка'>
+										Техническая поддержка
+									</option>
+									<option value='Оплата'>Оплата</option>
+									<option value='Возврат'>Возврат</option>
+									<option value='Другое'>Другое</option>
 								</select>
 							</div>
 

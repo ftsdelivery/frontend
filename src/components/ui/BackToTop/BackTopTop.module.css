@@ -1,0 +1,86 @@
+.backToTopButton {
+	position: fixed;
+	bottom: 50px;
+	right: 50px;
+	width: auto; /* Теперь кнопка будет автоматически подстраивать ширину */
+	height: 50px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 24px;
+	border-radius: 10px;
+	background: linear-gradient(
+		145deg,
+		#007bff,
+		#0062cc
+	); /* Градиент для выпуклости */
+	color: white;
+	border: none;
+	opacity: 0;
+	transform: translateY(30px);
+	transition: opacity 0.4s ease, transform 0.4s ease;
+	z-index: 1000;
+	padding: 0 15px; /* Добавляем отступ для текста */
+	box-shadow: 0px 0px 7px 2.5px rgba(11, 99, 246, 1);
+}
+
+.backToTopButton.show {
+	opacity: 1;
+	transform: translateY(0);
+	animation: bounce 0.5s ease forwards;
+}
+
+.backToTopButton.hide {
+	opacity: 0;
+}
+
+.backToTopButton:hover {
+	background-color: #0056b3;
+}
+
+/* Текст "Наверх" */
+.buttonText {
+	margin-left: 10px; /* Отступ для текста от иконки */
+	font-size: 16px;
+	font-weight: bold;
+}
+
+/* Анимация выпрыгивания */
+@keyframes bounce {
+	0% {
+		transform: translateY(30px);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
+
+/* Медиазапросы для мобильных устройств */
+@media (max-width: 768px) {
+	.backToTopButton {
+		width: 40px; /* Уменьшаем кнопку */
+		height: 40px;
+		bottom: 15px; /* Смещаем выше, чтобы не перекрывать важные элементы */
+		right: 15px; /* Смещаем вправо */
+		font-size: 20px; /* Уменьшаем размер иконки */
+		padding: 0; /* Убираем padding для иконки */
+	}
+
+	/* Скрываем текст "Наверх" на мобильных устройствах */
+	.buttonText {
+		display: none;
+	}
+}
+
+@media (max-width: 576px) {
+	.backToTopButton {
+		width: 35px; /* Ещё меньше на очень маленьких экранах */
+		height: 35px;
+		bottom: 10px; /* Ещё выше */
+		right: 10px; /* Ещё вправо */
+		font-size: 18px; /* Ещё меньше иконка */
+	}
+}

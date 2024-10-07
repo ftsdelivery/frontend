@@ -24,6 +24,23 @@ export const getTicketById = async (id: number) => {
 	return response.json()
 }
 
+export const getTicketsCount = async (): Promise<number> => {
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_BASE_URL}/api/tickets?status=PENDING`,
+		{
+			headers: {
+				Authorization: `Bearer ${process.env.API_KEY}`,
+			},
+		}
+	)
+
+	if (!response.ok) throw new Error('Unable to fetch orders.')
+
+	const data = await response.json()
+
+	return data.total
+}
+
 export const addTicket = async (ticket: Ticket): Promise<Ticket> => {
 	const response = await fetch(
 		`${process.env.NEXT_PUBLIC_BASE_URL}/api/tickets`,

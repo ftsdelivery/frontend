@@ -5,6 +5,7 @@ import {
 	updateWarehouse,
 } from '@/services/warehouses.service'
 import type { Warehouse } from '@/types/warehouse.types'
+import { playSuccessSound } from '@/utils/SoundEffects'
 import Image from 'next/image'
 import { useCallback, useEffect, useState } from 'react'
 import { Alert, Button, ButtonGroup, Form, Modal, Table } from 'react-bootstrap'
@@ -102,6 +103,7 @@ const Warehouses = () => {
 					)
 				)
 				toast.success('Склад успешно обновлен')
+				playSuccessSound()
 				fetchWarehouses()
 			} else {
 				// Добавление нового склада
@@ -112,6 +114,7 @@ const Warehouses = () => {
 				)
 				setWarehouses([...warehouses, newWh.data])
 				toast.success('Склад успешно добавлен')
+				playSuccessSound()
 				fetchWarehouses()
 			}
 			handleModalClose()
@@ -134,6 +137,7 @@ const Warehouses = () => {
 		try {
 			await removeWarehouse(id)
 			toast.success('Склад успешно удален')
+			playSuccessSound()
 			setWarehouses(warehouses.filter(wh => wh.id !== id))
 			fetchWarehouses()
 		} catch (error) {

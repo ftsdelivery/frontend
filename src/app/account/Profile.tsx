@@ -3,13 +3,15 @@
 import Footer from '@/components/Layout/Footer/Footer'
 import LogoComponent from '@/components/Layout/Navbar/LogoComponent'
 import Badge from '@/components/ui/Badge/Badge'
+import { deleteOrder, updateOrder } from '@/services/order.service'
 import { getUser } from '@/services/user.service'
 import { Order, Status } from '@/types/order.types'
 import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { Alert } from 'react-bootstrap'
+import { Alert, Button, Modal } from 'react-bootstrap'
 import styles from './Profile.module.css'
 
 interface CustomSession {
@@ -39,6 +41,9 @@ export default function Profile() {
 		keyof typeof Status | null
 	>(null)
 	const [showNewOrders, setShowNewOrders] = useState(false)
+	const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
+	const [showEditModal, setShowEditModal] = useState(false)
+	const [showDeleteModal, setShowDeleteModal] = useState(false)
 
 	const variantMapping: Record<
 		string,
@@ -120,6 +125,49 @@ export default function Profile() {
 			),
 		[filteredByNewOrders, searchText]
 	)
+
+	const handleEditClick = (order: Order) => {
+		setSelectedOrder(order)
+		setShowEditModal(true)
+	}
+
+	const handleCloseEditModal = () => {
+		setShowEditModal(false)
+	}
+
+	const handleDeleteClick = (order: Order) => {
+		setSelectedOrder(order)
+		setShowDeleteModal(true)
+	}
+
+	const handleCloseDeleteModal = () => {
+		setShowDeleteModal(false)
+	}
+
+	const handleSaveChanges = async () => {
+		if (selectedOrder) {
+			try {
+				await updateOrder(selectedOrder.id || 0, selectedOrder)
+				setShowEditModal(false)
+				// Перезагрузить данные пользователя
+			} catch (error) {
+				console.error('Ошибка при обновлении заявки:', error)
+			}
+		}
+	}
+
+	// Обработчик для удаления заявки
+	const handleDeleteOrder = async () => {
+		if (selectedOrder) {
+			try {
+				await deleteOrder(selectedOrder.id || 0)
+				setShowDeleteModal(false)
+				// Перезагрузить данные пользователя
+			} catch (error) {
+				console.error('Ошибка при удалении заявки:', error)
+			}
+		}
+	}
 
 	return (
 		<div className={styles.Main}>
@@ -229,13 +277,13 @@ export default function Profile() {
 							</Alert>
 						) : (
 							<div
-								className={`accordion pt-3 mt-4 ${styles.accordion}`}
+								className={`accordion mt-4 ${styles.accordion}`}
 								id='ordersAccordion'
 							>
 								{finalFilteredOrders.length > 0 ? (
 									finalFilteredOrders.map((order: any, index: any) => (
 										<div
-											className={`accordion-item ${styles.accordion_item}`}
+											className={`accordion-item mt-1 ${styles.accordion_item}`}
 											key={order.id}
 										>
 											<h2
@@ -372,14 +420,70 @@ export default function Profile() {
 															<strong>Предварительная стоимость: </strong>
 															{formatCurrency(order.price)}
 														</li>
-														<li className='mt-3 d-flex align-items-center justify-content-center'>
-															<button className='btn btn-warning me-2'>
-																<i className='bi bi-pencil-square'></i>{' '}
-																Редактировать
-															</button>
-															<button className='btn btn-danger ms-2'>
-																<i className='bi bi-trash'></i> Удалить
-															</button>
+														<li className='mt-3 d-flex flex-column align-items-center justify-content-center'>
+															{/* Проверка на статус PENDING */}
+															{order.status === 'PENDING' ? (
+																<>
+																	{/* Пустой элемент для отступа */}
+																	<div style={{ marginBottom: '0.5rem' }}></div>
+																	{/* Контейнер для кнопок, чтобы они располагались рядом */}
+																	<div className='d-flex'>
+																		<button
+																			className='btn btn-warning me-2'
+																			onClick={() => handleEditClick(order)}
+																		>
+																			<i className='bi bi-pencil-square'></i>{' '}
+																			Редактировать
+																		</button>
+																		<button
+																			className='btn btn-danger ms-2'
+																			onClick={() => handleDeleteClick(order)}
+																		>
+																			<i className='bi bi-x-lg'></i> Отменить
+																		</button>
+																	</div>
+																</>
+															) : (
+																<>
+																	{/* Компактная предупреждающая табличка */}
+																	<div
+																		className='alert alert-danger'
+																		style={{
+																			width: 'auto',
+																			fontSize: '0.75rem',
+																			padding: '0.5rem',
+																			marginBottom: '0.5rem',
+																		}}
+																	>
+																		<i
+																			className={`bi bi-exclamation-triangle ${styles.orange_icon}`}
+																		></i>{' '}
+																		Ваша заявка была подтверждена менеджером.
+																		Самостоятельное редактирование недоступно.
+																		Для внесения изменений или отмены заявки,
+																		пожалуйста, обратитесь в{' '}
+																		<Link href='/support'>
+																			службу поддержки
+																		</Link>
+																	</div>
+																	{/* Кнопки становятся неактивными и размещены под предупреждением */}
+																	<div className='d-flex align-items-center'>
+																		<button
+																			className='btn btn-warning me-2'
+																			disabled
+																		>
+																			<i className='bi bi-pencil-square'></i>{' '}
+																			Редактировать
+																		</button>
+																		<button
+																			className='btn btn-danger ms-2'
+																			disabled
+																		>
+																			<i className='bi bi-x-lg'></i> Отменить
+																		</button>
+																	</div>
+																</>
+															)}
 														</li>
 													</ul>
 												</div>
@@ -394,6 +498,67 @@ export default function Profile() {
 					</div>
 				</div>
 			</div>
+			<Modal show={showEditModal} onHide={handleCloseEditModal}>
+				<Modal.Header closeButton>
+					<Modal.Title>Редактировать заявку №{selectedOrder?.id}</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{/* Форма для редактирования заявки */}
+					<div className='mb-3'>
+						<label>Количество:</label>
+						<input
+							type='number'
+							className='form-control'
+							value={selectedOrder?.quantity || ''}
+							onChange={e =>
+								setSelectedOrder(prev => ({
+									...prev,
+									quantity: parseInt(e.target.value),
+								}))
+							}
+						/>
+					</div>
+					<div className='mb-3'>
+						<label>Комментарий:</label>
+						<textarea
+							className='form-control'
+							value={selectedOrder?.comment || ''}
+							onChange={e =>
+								setSelectedOrder(prev => ({
+									...prev,
+									comment: e.target.value,
+								}))
+							}
+						/>
+					</div>
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant='secondary' onClick={handleCloseEditModal}>
+						Закрыть
+					</Button>
+					<Button variant='primary' onClick={handleSaveChanges}>
+						Сохранить изменения
+					</Button>
+				</Modal.Footer>
+			</Modal>
+
+			{/* Модальное окно для подтверждения удаления заявки */}
+			<Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+				<Modal.Header closeButton>
+					<Modal.Title>Подтверждение удаления</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					Вы действительно хотите удалить заявку №{selectedOrder?.id}?
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant='secondary' onClick={handleCloseDeleteModal}>
+						Отменить
+					</Button>
+					<Button variant='danger' onClick={handleDeleteOrder}>
+						Удалить
+					</Button>
+				</Modal.Footer>
+			</Modal>
 			<Footer />
 		</div>
 	)

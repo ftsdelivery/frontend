@@ -10,6 +10,7 @@ interface SidebarLinkProps {
 	isActive: boolean
 	onClick: () => void
 	notificationCount?: number
+	notificationCountTickets?: number // Добавляем это свойство
 }
 
 const SidebarLink: React.FC<SidebarLinkProps> = ({
@@ -20,6 +21,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
 	isActive,
 	onClick,
 	notificationCount = 0,
+	notificationCountTickets = 0,
 }) => {
 	return (
 		<li className={`nav-item ${styles.nav_item}`}>
@@ -38,6 +40,11 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
 						{notificationCount > 0 && (
 							<span className='badge d-flex text-bg-danger ms-3 align-items-center'>
 								{notificationCount}
+							</span>
+						)}
+						{notificationCountTickets > 0 && ( // Отображаем количество тикетов
+							<span className='badge d-flex text-bg-danger ms-3 align-items-center'>
+								{notificationCountTickets}
 							</span>
 						)}
 					</>

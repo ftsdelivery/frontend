@@ -38,6 +38,7 @@ model User {
   admin_password  String?
   orders_count    Int      @default(0)
   used_promocodes String[] @default([])
+  reset_token     String?
 
   @@map("users")
 }

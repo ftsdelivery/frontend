@@ -7,6 +7,7 @@ import NewsSlider from '@/components/MainPage/NewsSlider/NewsSlider'
 import SubmitSectionComponent from '@/components/MainPage/OrderForm/OrderForm'
 import SupportSectionComponent from '@/components/MainPage/Support/SupportSection'
 import ThreeBlocksSecionComponent from '@/components/MainPage/ThreeBlocks/ThreeBlockSection'
+import BackToTopButton from '@/components/ui/BackToTop/BackToTop'
 
 export default function Page() {
 	return (
@@ -20,6 +21,7 @@ export default function Page() {
 			<ApplySectionComponent />
 			<SubmitSectionComponent />
 			<Footer />
+			<BackToTopButton />
 		</div>
 	)
 }

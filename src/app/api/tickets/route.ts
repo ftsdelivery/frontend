@@ -2,30 +2,43 @@ import { createLog } from '@/services/log.service'
 import pool from '@/utils/db'
 import { NextResponse } from 'next/server'
 
-export async function GET(request: Request) {
+export async function GET(req: any) {
 	try {
-		const { searchParams } = new URL(request.url)
-		const ticketId = searchParams.get('ticket_id')
-		let query = `SELECT * FROM tickets`
+		const { searchParams } = new URL(req.url)
+
+		let whereConditions: string[] = []
 		let queryParams: any[] = []
-		let conditions: string[] = []
 
-		if (ticketId) {
-			conditions.push(`ticket_id = $${queryParams.length + 1}`)
-			queryParams.push(ticketId)
+		const filterableFields = {
+			id: 'number',
+			status: 'enum',
+			user_id: 'number',
+			email: 'string',
 		}
 
-		if (conditions.length > 0) {
-			query += ` WHERE ` + conditions.join(' AND ')
+		Object.entries(filterableFields).forEach(([field, type]) => {
+			const value = searchParams.get(field)
+			if (value) {
+				if (type === 'string') {
+					whereConditions.push(`${field} ILIKE $${queryParams.length + 1}`)
+					queryParams.push(`%${value}%`)
+				} else if (type === 'number') {
+					whereConditions.push(`${field} = $${queryParams.length + 1}`)
+					queryParams.push(parseFloat(value))
+				} else if (type === 'enum') {
+					whereConditions.push(`${field} = $${queryParams.length + 1}`)
+					queryParams.push(value.toUpperCase())
+				}
+			}
+		})
+
+		let query = 'SELECT * FROM tickets'
+
+		if (whereConditions.length > 0) {
+			query += ' WHERE ' + whereConditions.join(' AND ')
 		}
 
-		const sortField = searchParams.get('_sort')
-		const sortOrder = searchParams.get('_order') === 'DESC' ? 'DESC' : 'ASC'
-		if (sortField) {
-			query += ` ORDER BY ${sortField} ${sortOrder}`
-		}
-
-		const limit = parseInt(searchParams.get('_limit') || '0', 10)
+		const limit = parseInt(searchParams.get('_limit') || '10', 10)
 		const page = parseInt(searchParams.get('_page') || '1', 10)
 		if (limit > 0) {
 			const offset = (page - 1) * limit
@@ -37,16 +50,16 @@ export async function GET(request: Request) {
 
 		const { rows } = await pool.query(query, queryParams)
 
-		let total = rows.length
-		if (ticketId === null) {
-			const totalQuery = 'SELECT COUNT(*) FROM tickets'
-			const totalResult = await pool.query(totalQuery)
-			total = parseInt(totalResult.rows[0].count, 10)
+		let totalQuery = 'SELECT COUNT(*) FROM tickets'
+		if (whereConditions.length > 0) {
+			totalQuery += ' WHERE ' + whereConditions.join(' AND ')
 		}
 
-		if (rows.length === 0) {
-			return NextResponse.json({ error: 'No Tickets found' }, { status: 404 })
-		}
+		const totalResult = await pool.query(
+			totalQuery,
+			queryParams.slice(0, whereConditions.length)
+		)
+		const total = parseInt(totalResult.rows[0].count, 10)
 
 		return NextResponse.json({
 			data: rows,
@@ -54,7 +67,7 @@ export async function GET(request: Request) {
 			pageInfo: {
 				hasNextPage:
 					limit > 0 ? (page - 1) * limit + rows.length < total : false,
-				hasPreviousPage: limit > 0 ? page - 1 > 0 : false,
+				hasPreviousPage: limit > 0 ? page > 1 : false,
 			},
 		})
 	} catch (error) {

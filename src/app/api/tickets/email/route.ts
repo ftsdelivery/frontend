@@ -43,7 +43,8 @@ export async function POST(request: Request) {
 				padding-bottom: 20px;
 			}
 			.header img {
-				width: 100px; /* Задайте желаемую ширину логотипа */
+				width: 350px;
+				heigth: 300px /* Задайте желаемую ширину логотипа */
 			}
 			.content {
 				line-height: 1.5;
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
 	<body>
 		<div class="container">
 			<div class="header">
-				<img src="http://localhost:3000/images/logo/logo_v1.svg" alt="Логотип" />
+				<img src="https://i.imgur.com/tU6Ecqb.png" alt="Логотип" />
 				<h1>Ответ на ваш запрос в поддержку</h1>
 			</div>
 			<div class="content">
@@ -86,8 +87,8 @@ export async function POST(request: Request) {
 			</div>
 			<div class="footer">
 				<p>
-					<a href="http://localhost:3000">Посетите наш сайт</a> | 
-					<a href="http://localhost:3000/support">Свяжитесь с поддержкой</a>
+					<a href="${process.env.NEXT_PUBLIC_BASE_URL}">Посетите наш сайт</a> | 
+					<a href="${process.env.NEXT_PUBLIC_BASE_URL}/support">Свяжитесь с поддержкой</a>
 				</p>
 				<p>&copy; 2024 FTS Delivery. Все права защищены.</p>
 			</div>

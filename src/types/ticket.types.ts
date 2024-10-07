@@ -1,6 +1,6 @@
 export enum Status {
-	PENDING,
-	ANSWERED,
+	PENDING = 'PENDING',
+	ANSWERED = 'ANSWERED',
 }
 
 export interface Ticket {

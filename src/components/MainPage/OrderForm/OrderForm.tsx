@@ -8,6 +8,7 @@ import { Order, Status } from '@/types/order.types'
 import { PromoCode } from '@/types/promocode.types'
 import { User } from '@/types/user.types'
 import { Warehouse } from '@/types/warehouse.types'
+import { playSuccessSound } from '@/utils/SoundEffects'
 import { InputMask } from '@react-input/mask'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
@@ -228,6 +229,7 @@ export default function SubmitSectionComponent() {
 					)
 					setPromoUsed(true)
 					toast.success('Промокод успешно применен')
+					playSuccessSound()
 					return true
 				} else {
 					toast.error('Превышен лимит использований промокода')
@@ -386,6 +388,7 @@ export default function SubmitSectionComponent() {
 
 			await createOrder(order)
 			toast.success('Заявка успешно отправлена')
+			playSuccessSound()
 
 			UpdateUseCountPromoCode(promoCode)
 			UpdateOrdersCountUser(userID || 0, showPromoCode ? promoCode : undefined)

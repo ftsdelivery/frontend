@@ -118,6 +118,15 @@ export default function NewsSlider() {
 												/>
 												<Card.Body>
 													<Card.Title>{newsItem.title}</Card.Title>
+													<p className={`mt-2 ${styles.newsExcerpt}`}>
+														{new Date(
+															newsItem.created_at || ''
+														).toLocaleDateString('ru-RU', {
+															year: 'numeric',
+															month: 'long',
+															day: 'numeric',
+														})}
+													</p>
 													<Card.Text className={styles.cardText}>
 														{newsItem.content}
 													</Card.Text>

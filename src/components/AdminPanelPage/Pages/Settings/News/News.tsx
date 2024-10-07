@@ -5,6 +5,7 @@ import {
 	updateNews,
 } from '@/services/news.service' // Assuming you have news services set up
 import type { News } from '@/types/news.types' // Assuming you have news types set up
+import { playSuccessSound } from '@/utils/SoundEffects'
 import { useCallback, useEffect, useState } from 'react'
 import {
 	Alert,
@@ -121,6 +122,7 @@ const NewsManagement = () => {
 					)
 				)
 				toast.success('Новость успешно обновлена')
+				playSuccessSound()
 				fetchNews()
 			} else {
 				const newN = await addNews(
@@ -130,6 +132,7 @@ const NewsManagement = () => {
 				)
 				setNewsItems([...newsItems, newN.data])
 				toast.success('Новость успешно добавлена')
+				playSuccessSound()
 				fetchNews()
 			}
 			handleModalClose()
@@ -146,6 +149,7 @@ const NewsManagement = () => {
 		try {
 			await removeNews(id)
 			toast.success('Новость успешно удалена')
+			playSuccessSound()
 			setNewsItems(newsItems.filter(n => n.id !== id))
 			fetchNews()
 		} catch (error) {

@@ -9,4 +9,5 @@ export interface User {
 	role?: string
 	used_promocodes?: string[] | string
 	orders_count?: number
+	reset_token?: string | null
 }
